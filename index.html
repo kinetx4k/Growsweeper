@@ -324,13 +324,19 @@
         /* NEU: Powerup Sidebar */
         .powerups-sidebar {
             position: fixed;
-            right: 20px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            align-items: center; /* Zentriert die unteren Buttons unter der 2er-Reihe */
+            gap: 8px; 
             z-index: 50;
+        }
+
+        .powerup-row {
+            display: flex;
+            gap: 8px;
         }
 
         .tool-btn {
@@ -338,8 +344,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 80px;
-            height: 80px;
+            width: 65px; /* Kleiner gemacht */
+            height: 65px; /* Kleiner gemacht */
             background-color: #ffffff;
             border-top: 4px solid #ffffff;
             border-left: 4px solid #ffffff;
@@ -371,13 +377,15 @@
         }
 
         .tool-emoji {
-            font-size: 32px;
-            margin-bottom: 4px;
+            font-size: 26px; /* Kleiner gemacht */
+            margin-bottom: 2px;
         }
 
         .tool-text {
-            font-size: 14px;
+            font-size: 11px; /* Kleiner gemacht */
             font-weight: bold;
+            text-align: center;
+            line-height: 1.1;
         }
 
         .tool-btn:disabled .tool-emoji { filter: grayscale(100%) opacity(50%); }
@@ -415,6 +423,31 @@
             0% { background-color: #00ffff; box-shadow: inset 0 0 15px #00ffff; }
             50% { background-color: #008080; box-shadow: inset 0 0 25px #00ffff; }
             100% { background-color: #c0c0c0; box-shadow: none; }
+        }
+
+        /* NEU: Eigene Animation für den Cross/Edge Scan */
+        .cross-scan-anim {
+            animation: cross-scan-pulse 1s forwards;
+            z-index: 10;
+        }
+
+        @keyframes cross-scan-pulse {
+            0% { background-color: #ff00ff; box-shadow: inset 0 0 15px #ff00ff; }
+            50% { background-color: #800080; box-shadow: inset 0 0 25px #ff00ff; }
+            100% { background-color: #c0c0c0; box-shadow: none; }
+        }
+
+        /* NEU: Mega Nuke Scan Animation */
+        .nuke-scan-anim {
+            animation: nuke-pulse 1s forwards;
+            z-index: 15;
+        }
+
+        @keyframes nuke-pulse {
+            0% { background-color: #ffff00; box-shadow: inset 0 0 20px #ffff00; transform: scale(1); }
+            30% { background-color: #ff8800; box-shadow: inset 0 0 40px #ff8800; transform: scale(1.1); z-index: 20;}
+            70% { background-color: #ff0000; box-shadow: inset 0 0 50px #ff0000; transform: scale(1.15); z-index: 20;}
+            100% { background-color: #c0c0c0; box-shadow: none; transform: scale(1); }
         }
 
         /* Totem of Undying Effect */
@@ -582,17 +615,29 @@
 
     <!-- Powerups Sidebar (Rechts) -->
     <div class="powerups-sidebar">
-        <button id="btn-area-scan" class="tool-btn">
-            <span class="tool-emoji">🔍</span>
-            <span id="txt-area-scan" class="tool-text">READY</span>
+        <!-- 3x3 und 10x10 nebeneinander -->
+        <div class="powerup-row">
+            <button id="btn-area-scan" class="tool-btn">
+                <span class="tool-emoji">🔍</span>
+                <span id="txt-area-scan" class="tool-text">3x3<br>READY</span>
+            </button>
+            <button id="btn-nuke-scan" class="tool-btn">
+                <span class="tool-emoji">☢️</span>
+                <span id="txt-nuke-scan" class="tool-text">10x10<br>READY</span>
+            </button>
+        </div>
+        <!-- Andere zentriert darunter -->
+        <button id="btn-cross-scan" class="tool-btn">
+            <span class="tool-emoji">🎯</span>
+            <span id="txt-cross-scan" class="tool-text">Cross<br>READY</span>
         </button>
         <button id="btn-half-scan" class="tool-btn">
             <span class="tool-emoji">📡</span>
-            <span id="txt-half-scan" class="tool-text">READY</span>
+            <span id="txt-half-scan" class="tool-text">1/2 💣<br>READY</span>
         </button>
         <button id="btn-safe-scan" class="tool-btn">
             <span class="tool-emoji">🌟</span>
-            <span id="txt-safe-scan" class="tool-text">READY</span>
+            <span id="txt-safe-scan" class="tool-text">1/2 🌟<br>READY</span>
         </button>
     </div>
 
@@ -614,7 +659,7 @@
                     <li style="margin-bottom: 8px;"><b>Click to Reset (Smiley):</b> Instantly restart the current level anytime.</li>
                     <li style="margin-bottom: 8px;"><b>Save / Load:</b> Generates a 1000-character secure code (Level, Score, Fails, Cooldowns). Copy to save, paste to resume!</li>
                     <li style="margin-bottom: 8px;"><b>Total Fails:</b> Tracks your total mine explosions across all sessions.</li>
-                    <li><b>Powerups (Right Sidebar):</b> Use 🔍, 📡 and 🌟 to scan! Every 5 levels, you gain an automatic Shield 🛡️ to survive mine hits!</li>
+                    <li><b>Powerups (Right Sidebar):</b> Use 🔍, 🎯, ☢️, 📡 and 🌟 to scan! Every 5 levels, you gain an automatic Shield 🛡️ to survive mine hits!</li>
                 </ul>
             </div>
         </div>
@@ -677,16 +722,24 @@
 
         // Cooldown & Board Management
         let lastAreaScan = 0;
+        let lastCrossScan = 0;
+        let lastNukeScan = 0;
         let lastHalfScan = 0;
         let lastSafeScan = 0;
-        const AREA_SCAN_CD = 60 * 1000; 
+        const AREA_SCAN_CD = 180 * 1000; // Jetzt 3 Minuten (180 Sekunden)
+        const CROSS_SCAN_CD = 60 * 1000; 
+        const NUKE_SCAN_CD = 600 * 1000; // 10 Minuten
         const HALF_SCAN_CD = 300 * 1000; 
         const SAFE_SCAN_CD = 360 * 1000; 
         let currentBoardId = 0;
         let areaScanWasOnCooldown = false;
+        let crossScanWasOnCooldown = false;
+        let nukeScanWasOnCooldown = false;
         let halfScanWasOnCooldown = false;
         let safeScanWasOnCooldown = false;
         let isTargetingAreaScan = false;
+        let isTargetingCrossScan = false;
+        let isTargetingNukeScan = false;
 
         // Tutorial Status
         let tutorialStep = 0;
@@ -736,6 +789,10 @@
 
         const btnAreaScan = document.getElementById('btn-area-scan');
         const txtAreaScan = document.getElementById('txt-area-scan');
+        const btnCrossScan = document.getElementById('btn-cross-scan');
+        const txtCrossScan = document.getElementById('txt-cross-scan');
+        const btnNukeScan = document.getElementById('btn-nuke-scan');
+        const txtNukeScan = document.getElementById('txt-nuke-scan');
         const btnHalfScan = document.getElementById('btn-half-scan');
         const txtHalfScan = document.getElementById('txt-half-scan');
         const btnSafeScan = document.getElementById('btn-safe-scan');
@@ -751,7 +808,9 @@
         const SAVE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
 
         function generateSaveCode() {
-            const dataStr = JSON.stringify({ l: level, s: totalScore, a: lastAreaScan, h: lastHalfScan, f: totalFails, r: lastSafeScan });
+            const dataStr = JSON.stringify({ 
+                l: level, s: totalScore, a: lastAreaScan, c: lastCrossScan, n: lastNukeScan, h: lastHalfScan, f: totalFails, r: lastSafeScan 
+            });
             const data = btoa(dataStr);
             const payload = `~${data}~`;
             let code = '';
@@ -800,8 +859,9 @@
             const data = parseSaveCode(code);
             if (data) {
                 level = data.l; totalScore = data.s;
-                lastAreaScan = data.a || 0; lastHalfScan = data.h || 0;
-                lastSafeScan = data.r || 0;
+                lastAreaScan = data.a || 0; lastCrossScan = data.c || 0; 
+                lastNukeScan = data.n || 0;
+                lastHalfScan = data.h || 0; lastSafeScan = data.r || 0;
                 totalFails = data.f || 0; 
                 saveLoadDialog.style.display = 'none';
                 initLevel();
@@ -816,7 +876,7 @@
         document.addEventListener('mousedown', (e) => {
             if (e.button !== 0) return; 
             if (e.target.closest('.dialog-overlay') || e.target.closest('.window-title-bar') || e.target.id === 'smiley-btn' || e.target.closest('.powerups-sidebar') || e.target.closest('.footer')) return;
-            if (isTargetingAreaScan) return; 
+            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan) return; 
             
             dragStartX = e.clientX;
             dragStartY = e.clientY;
@@ -826,7 +886,7 @@
         });
 
         document.addEventListener('mousemove', (e) => {
-            if (e.buttons !== 1 || isTargetingAreaScan) return; 
+            if (e.buttons !== 1 || isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan) return; 
             const dx = e.clientX - dragStartX;
             const dy = e.clientY - dragStartY;
             
@@ -848,11 +908,11 @@
         // Mausrad Zoom
         document.addEventListener('wheel', (e) => {
             if (e.target.closest('.dialog-overlay') || e.target.closest('.window-title-bar') || e.target.closest('.powerups-sidebar') || e.target.closest('.footer')) return;
-            e.preventDefault(); // Verhindert natives Scrollen
+            e.preventDefault(); 
             
             const zoomSpeed = 0.0015;
             mapScale += e.deltaY * -zoomSpeed;
-            mapScale = Math.min(Math.max(0.2, mapScale), 3); // Begrenzung zwischen 20% und 300% Zoom
+            mapScale = Math.min(Math.max(0.2, mapScale), 3); 
             
             updateMapTransform();
         }, { passive: false });
@@ -860,7 +920,7 @@
         // Touch & Pinch-to-Zoom (Handy/Tablet)
         document.addEventListener('touchstart', (e) => {
             if (e.target.closest('.dialog-overlay') || e.target.closest('.window-title-bar') || e.target.id === 'smiley-btn' || e.target.closest('.powerups-sidebar') || e.target.closest('.footer')) return;
-            if (isTargetingAreaScan) return;
+            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan) return;
 
             if (e.touches.length === 1) {
                 dragStartX = e.touches[0].clientX;
@@ -878,7 +938,7 @@
         }, { passive: false });
 
         document.addEventListener('touchmove', (e) => {
-            if (isTargetingAreaScan) return;
+            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan) return;
 
             if (e.touches.length === 1) {
                 const dx = e.touches[0].clientX - dragStartX;
@@ -886,7 +946,6 @@
                 
                 if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
                     isDraggingMap = true;
-                    // Nur preventDefault beim echten Ziehen aufrufen, damit Klicks noch ankommen
                     if (e.cancelable) e.preventDefault(); 
                 }
 
@@ -896,7 +955,7 @@
                     updateMapTransform();
                 }
             } else if (e.touches.length === 2) {
-                if (e.cancelable) e.preventDefault(); // Verhindert nativen Pinch-Zoom des Browsers
+                if (e.cancelable) e.preventDefault(); 
                 const currentPinchDistance = Math.hypot(
                     e.touches[0].clientX - e.touches[1].clientX,
                     e.touches[0].clientY - e.touches[1].clientY
@@ -957,6 +1016,8 @@
         setInterval(() => {
             if (gameOver) {
                 btnAreaScan.disabled = true;
+                btnCrossScan.disabled = true;
+                btnNukeScan.disabled = true;
                 btnHalfScan.disabled = true;
                 btnSafeScan.disabled = true;
                 return;
@@ -964,7 +1025,7 @@
 
             const now = Date.now();
             
-            // Area Scan
+            // Area Scan (3x3)
             const areaLeft = Math.max(0, AREA_SCAN_CD - (now - lastAreaScan));
             if (areaLeft === 0) {
                 if (areaScanWasOnCooldown) {
@@ -974,7 +1035,7 @@
                 }
                 if (!isTargetingAreaScan) {
                     btnAreaScan.disabled = false;
-                    txtAreaScan.textContent = "READY";
+                    txtAreaScan.innerHTML = "3x3<br>READY";
                 }
             } else {
                 areaScanWasOnCooldown = true;
@@ -984,7 +1045,53 @@
                 if (isTargetingAreaScan) cancelTargetingMode();
                 
                 const secs = Math.ceil(areaLeft / 1000);
-                txtAreaScan.textContent = `${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
+                txtAreaScan.innerHTML = `3x3<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
+            }
+
+            // Cross Scan
+            const crossLeft = Math.max(0, CROSS_SCAN_CD - (now - lastCrossScan));
+            if (crossLeft === 0) {
+                if (crossScanWasOnCooldown) {
+                    crossScanWasOnCooldown = false;
+                    btnCrossScan.classList.add('ready-blink');
+                    setTimeout(() => btnCrossScan.classList.remove('ready-blink'), 3000);
+                }
+                if (!isTargetingCrossScan) {
+                    btnCrossScan.disabled = false;
+                    txtCrossScan.innerHTML = "Cross<br>READY";
+                }
+            } else {
+                crossScanWasOnCooldown = true;
+                btnCrossScan.disabled = true;
+                btnCrossScan.classList.remove('ready-blink');
+                
+                if (isTargetingCrossScan) cancelTargetingMode();
+                
+                const secs = Math.ceil(crossLeft / 1000);
+                txtCrossScan.innerHTML = `Cross<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
+            }
+
+            // Nuke Scan (10x10)
+            const nukeLeft = Math.max(0, NUKE_SCAN_CD - (now - lastNukeScan));
+            if (nukeLeft === 0) {
+                if (nukeScanWasOnCooldown) {
+                    nukeScanWasOnCooldown = false;
+                    btnNukeScan.classList.add('ready-blink');
+                    setTimeout(() => btnNukeScan.classList.remove('ready-blink'), 3000);
+                }
+                if (!isTargetingNukeScan) {
+                    btnNukeScan.disabled = false;
+                    txtNukeScan.innerHTML = "10x10<br>READY";
+                }
+            } else {
+                nukeScanWasOnCooldown = true;
+                btnNukeScan.disabled = true;
+                btnNukeScan.classList.remove('ready-blink');
+                
+                if (isTargetingNukeScan) cancelTargetingMode();
+                
+                const secs = Math.ceil(nukeLeft / 1000);
+                txtNukeScan.innerHTML = `10x10<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
             }
 
             // Half Scan
@@ -996,13 +1103,13 @@
                     setTimeout(() => btnHalfScan.classList.remove('ready-blink'), 3000);
                 }
                 btnHalfScan.disabled = false;
-                txtHalfScan.textContent = "READY";
+                txtHalfScan.innerHTML = "1/2 💣<br>READY";
             } else {
                 halfScanWasOnCooldown = true;
                 btnHalfScan.disabled = true;
                 btnHalfScan.classList.remove('ready-blink');
                 const secs = Math.ceil(halfLeft / 1000);
-                txtHalfScan.textContent = `${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
+                txtHalfScan.innerHTML = `1/2 💣<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
             }
 
             // Safe Scan (Half Reveal)
@@ -1014,13 +1121,13 @@
                     setTimeout(() => btnSafeScan.classList.remove('ready-blink'), 3000);
                 }
                 btnSafeScan.disabled = false;
-                txtSafeScan.textContent = "READY";
+                txtSafeScan.innerHTML = "1/2 🌟<br>READY";
             } else {
                 safeScanWasOnCooldown = true;
                 btnSafeScan.disabled = true;
                 btnSafeScan.classList.remove('ready-blink');
                 const secs = Math.ceil(safeLeft / 1000);
-                txtSafeScan.textContent = `${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
+                txtSafeScan.innerHTML = `1/2 🌟<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
             }
         }, 500);
 
@@ -1056,12 +1163,32 @@
         // --- Tool / Powerup Logic ---
         function updateTargetHighlights(centerR, centerC) {
             clearTargetHighlights();
-            if (!isTargetingAreaScan) return;
-            for(let dr=-1; dr<=1; dr++) {
-                for(let dc=-1; dc<=1; dc++) {
-                    const nr = centerR + dr, nc = centerC + dc;
-                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
-                        board[nr][nc].element.classList.add('target-highlight');
+            if (isTargetingAreaScan) {
+                for(let dr=-1; dr<=1; dr++) {
+                    for(let dc=-1; dc<=1; dc++) {
+                        const nr = centerR + dr, nc = centerC + dc;
+                        if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
+                            board[nr][nc].element.classList.add('target-highlight');
+                        }
+                    }
+                }
+            } else if (isTargetingCrossScan) {
+                // Das Kreuz PLUS die gesamten äußeren Ränder highlighten
+                for(let r=0; r<gridSize; r++) {
+                    for(let c=0; c<gridSize; c++) {
+                        if (r === centerR || c === centerC || r === 0 || r === gridSize - 1 || c === 0 || c === gridSize - 1) {
+                            board[r][c].element.classList.add('target-highlight');
+                        }
+                    }
+                }
+            } else if (isTargetingNukeScan) {
+                // Massive 10x10 Area (von -4 bis +5 ausgehend vom Zentrum = 10 Gitter)
+                for(let dr=-4; dr<=5; dr++) {
+                    for(let dc=-4; dc<=5; dc++) {
+                        const nr = centerR + dr, nc = centerC + dc;
+                        if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
+                            board[nr][nc].element.classList.add('target-highlight');
+                        }
                     }
                 }
             }
@@ -1073,12 +1200,19 @@
 
         function cancelTargetingMode() {
             isTargetingAreaScan = false;
+            isTargetingCrossScan = false;
+            isTargetingNukeScan = false;
             boardEl.classList.remove('targeting-mode');
             clearTargetHighlights();
             btnAreaScan.classList.remove('targeting-blink');
-            if (Date.now() - lastAreaScan >= AREA_SCAN_CD) txtAreaScan.textContent = "READY";
+            btnCrossScan.classList.remove('targeting-blink');
+            btnNukeScan.classList.remove('targeting-blink');
+            if (Date.now() - lastAreaScan >= AREA_SCAN_CD) txtAreaScan.innerHTML = "3x3<br>READY";
+            if (Date.now() - lastCrossScan >= CROSS_SCAN_CD) txtCrossScan.innerHTML = "Cross<br>READY";
+            if (Date.now() - lastNukeScan >= NUKE_SCAN_CD) txtNukeScan.innerHTML = "10x10<br>READY";
         }
 
+        // Area Scan Execution
         function executeAreaScan(centerR, centerC) {
             if (firstClick) {
                 startTimer();
@@ -1133,12 +1267,154 @@
             cancelTargetingMode();
         }
 
+        // NEU: Cross Scan Execution
+        function executeCrossScan(centerR, centerC) {
+            if (firstClick) {
+                startTimer();
+                placeMines(centerR, centerC);
+                firstClick = false;
+            }
+
+            const targetCells = [];
+            let maxDist = 0;
+            
+            for(let r=0; r<gridSize; r++) {
+                for(let c=0; c<gridSize; c++) {
+                    if (r === centerR || c === centerC || r === 0 || r === gridSize - 1 || c === 0 || c === gridSize - 1) {
+                        targetCells.push(board[r][c]);
+                    }
+                }
+            }
+            
+            lastCrossScan = Date.now();
+            btnCrossScan.disabled = true;
+            btnCrossScan.classList.remove('targeting-blink');
+            
+            const boardId = currentBoardId;
+
+            targetCells.forEach(cell => {
+                const dist = Math.abs(cell.r - centerR) + Math.abs(cell.c - centerC);
+                maxDist = Math.max(maxDist, dist);
+                const delay = dist * 40;
+
+                setTimeout(() => {
+                    if (boardId !== currentBoardId || gameOver) return;
+                    cell.element.classList.add('cross-scan-anim');
+                }, delay);
+            });
+
+            setTimeout(() => {
+                if (boardId !== currentBoardId || gameOver) return; 
+
+                targetCells.forEach(cell => {
+                    cell.element.classList.remove('cross-scan-anim');
+                    if (cell.isRevealed) return;
+
+                    if (cell.isMine) {
+                        if (!cell.isFlagged) {
+                            cell.isFlagged = true;
+                            setCellContent(cell, "⚑", true);
+                            cell.element.style.color = "#ff0000";
+                            flagsPlaced++;
+                        }
+                    } else {
+                        if (cell.isFlagged) {
+                            cell.isFlagged = false;
+                            flagsPlaced--;
+                            cell.element.innerHTML = "";
+                        }
+                        revealCell(cell.r, cell.c);
+                    }
+                });
+                updateUI();
+                checkWin();
+            }, (maxDist * 40) + 1000);
+
+            cancelTargetingMode();
+        }
+
+        // NEU: Nuke Scan Execution (10x10)
+        function executeNukeScan(centerR, centerC) {
+            if (firstClick) {
+                startTimer();
+                placeMines(centerR, centerC);
+                firstClick = false;
+            }
+
+            const targetCells = [];
+            let maxDist = 0;
+            
+            // Sammelt riesiges 10x10 Raster (-4 bis +5)
+            for(let dr=-4; dr<=5; dr++) {
+                for(let dc=-4; dc<=5; dc++) {
+                    const nr = centerR + dr, nc = centerC + dc;
+                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
+                        targetCells.push(board[nr][nc]);
+                    }
+                }
+            }
+            
+            lastNukeScan = Date.now();
+            btnNukeScan.disabled = true;
+            btnNukeScan.classList.remove('targeting-blink');
+            
+            const boardId = currentBoardId;
+
+            // Gewaltiger Screen Shake
+            document.body.classList.add('screen-shake');
+            setTimeout(() => document.body.classList.remove('screen-shake'), 600);
+
+            // Quadratische Expansionswelle (Chebyshev-Distanz)
+            targetCells.forEach(cell => {
+                const dist = Math.max(Math.abs(cell.r - centerR), Math.abs(cell.c - centerC));
+                maxDist = Math.max(maxDist, dist);
+                const delay = dist * 150; // 150ms pro Ring nach außen
+
+                setTimeout(() => {
+                    if (boardId !== currentBoardId || gameOver) return;
+                    cell.element.classList.add('nuke-scan-anim');
+                }, delay);
+            });
+
+            // Nachdem der letzte Ring animiert ist
+            setTimeout(() => {
+                if (boardId !== currentBoardId || gameOver) return; 
+
+                targetCells.forEach(cell => {
+                    cell.element.classList.remove('nuke-scan-anim');
+                    if (cell.isRevealed) return;
+
+                    if (cell.isMine) {
+                        if (!cell.isFlagged) {
+                            cell.isFlagged = true;
+                            setCellContent(cell, "⚑", true);
+                            cell.element.style.color = "#ff0000";
+                            flagsPlaced++;
+                        }
+                    } else {
+                        if (cell.isFlagged) {
+                            cell.isFlagged = false;
+                            flagsPlaced--;
+                            cell.element.innerHTML = "";
+                        }
+                        revealCell(cell.r, cell.c);
+                    }
+                });
+                updateUI();
+                checkWin();
+            }, (maxDist * 150) + 1000);
+
+            cancelTargetingMode();
+        }
+
+        // Button Listeners
         btnAreaScan.addEventListener('click', () => {
             if (btnAreaScan.disabled || gameOver) return;
 
             if (isTargetingAreaScan) {
                 cancelTargetingMode();
             } else {
+                cancelTargetingMode();
                 isTargetingAreaScan = true;
                 boardEl.classList.add('targeting-mode');
                 btnAreaScan.classList.add('targeting-blink');
@@ -1148,6 +1424,34 @@
                     tutorialStep = 6;
                     showTutorial("Now hover over the board to aim, and Left-click to scan a 3x3 area!");
                 }
+            }
+        });
+
+        btnCrossScan.addEventListener('click', () => {
+            if (btnCrossScan.disabled || gameOver) return;
+
+            if (isTargetingCrossScan) {
+                cancelTargetingMode();
+            } else {
+                cancelTargetingMode();
+                isTargetingCrossScan = true;
+                boardEl.classList.add('targeting-mode');
+                btnCrossScan.classList.add('targeting-blink');
+                txtCrossScan.textContent = "Target...";
+            }
+        });
+
+        btnNukeScan.addEventListener('click', () => {
+            if (btnNukeScan.disabled || gameOver) return;
+
+            if (isTargetingNukeScan) {
+                cancelTargetingMode();
+            } else {
+                cancelTargetingMode();
+                isTargetingNukeScan = true;
+                boardEl.classList.add('targeting-mode');
+                btnNukeScan.classList.add('targeting-blink');
+                txtNukeScan.textContent = "Target...";
             }
         });
 
@@ -1304,11 +1608,11 @@
                     cell.element.classList.add('cell');
                     
                     cell.element.addEventListener('mouseenter', () => {
-                        if (isTargetingAreaScan) updateTargetHighlights(r, c);
+                        updateTargetHighlights(r, c);
                     });
 
                     cell.element.addEventListener('mousedown', (e) => {
-                        if (e.button === 0 && !gameOver && !isAnimating && !cell.isRevealed && !isTargetingAreaScan) smileyBtn.textContent = "😮";
+                        if (e.button === 0 && !gameOver && !isAnimating && !cell.isRevealed && !isTargetingAreaScan && !isTargetingCrossScan && !isTargetingNukeScan) smileyBtn.textContent = "😮";
                     });
                     
                     cell.element.addEventListener('mouseup', (e) => {
@@ -1336,6 +1640,8 @@
                 showTutorial("Welcome to Growsweeper! Left-click the glowing cell to start.", board[1][1]);
             } else if (tutorialStep === 5) {
                 lastAreaScan = 0;
+                lastCrossScan = 0;
+                lastNukeScan = 0;
                 lastHalfScan = 0;
                 lastSafeScan = 0;
                 showTutorial("Level 2! Use the Powerups from the right menu now. Click the 🔍 button!", btnAreaScan);
@@ -1387,6 +1693,12 @@
                     showTutorial("Awesome! Now click the 📡 Half-Bomb Scan button!", btnHalfScan);
                 }
                 return;
+            } else if (isTargetingCrossScan) {
+                executeCrossScan(r, c);
+                return;
+            } else if (isTargetingNukeScan) {
+                executeNukeScan(r, c);
+                return;
             }
 
             if (tutorialStep === 1 && (r !== 1 || c !== 1)) return;
@@ -1416,7 +1728,7 @@
         function handleRightClick(e, r, c) {
             if (gameOver) return;
             
-            if (isTargetingAreaScan) {
+            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan) {
                 cancelTargetingMode();
                 return;
             }
