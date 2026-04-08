@@ -16,7 +16,7 @@
             -webkit-user-select: none;
             width: 100vw;
             height: 100vh;
-            overflow: hidden; /* Versteckt Scrollbars komplett */
+            overflow: hidden; 
             cursor: grab;
             transition: background-color 0.5s;
             display: flex;
@@ -47,7 +47,6 @@
             align-items: center;
             flex-direction: column;
             position: relative;
-            /* Transform wird via JS für Drag & Drop gesteuert */
         }
 
         .window {
@@ -321,48 +320,52 @@
             transition: transform 0.2s;
         }
 
-        /* NEU: Powerup Sidebar */
+        /* Powerup Sidebar - Grid System */
         .powerups-sidebar {
             position: fixed;
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Zentriert die unteren Buttons unter der 2er-Reihe */
-            gap: 8px; 
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px; 
             z-index: 50;
+            max-height: 95vh;
+            overflow-y: auto;
+            scrollbar-width: none; 
+            padding-right: 5px;
         }
-
-        .powerup-row {
-            display: flex;
-            gap: 8px;
-        }
+        .powerups-sidebar::-webkit-scrollbar { display: none; }
 
         .tool-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 65px; /* Kleiner gemacht */
-            height: 65px; /* Kleiner gemacht */
+            width: 55px;
+            height: 55px;
             background-color: #ffffff;
-            border-top: 4px solid #ffffff;
-            border-left: 4px solid #ffffff;
-            border-bottom: 4px solid #808080;
-            border-right: 4px solid #808080;
+            border-top: 3px solid #ffffff;
+            border-left: 3px solid #ffffff;
+            border-bottom: 3px solid #808080;
+            border-right: 3px solid #808080;
             color: #000000;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.5);
             cursor: pointer;
             transition: transform 0.1s;
+        }
+
+        .tool-btn:last-child:nth-child(odd) {
+            grid-column: span 2;
+            margin: 0 auto;
         }
         
         .tool-btn:active:not(:disabled) {
             background-color: #e0e0e0;
-            border-top: 4px solid #808080;
-            border-left: 4px solid #808080;
-            border-bottom: 4px solid #ffffff;
-            border-right: 4px solid #ffffff;
+            border-top: 3px solid #808080;
+            border-left: 3px solid #808080;
+            border-bottom: 3px solid #ffffff;
+            border-right: 3px solid #ffffff;
             transform: scale(0.95);
         }
 
@@ -370,19 +373,19 @@
             background-color: #800000; 
             color: #c0c0c0;
             cursor: default;
-            border-top: 4px solid #ffffff;
-            border-left: 4px solid #ffffff;
-            border-bottom: 4px solid #808080;
-            border-right: 4px solid #808080;
+            border-top: 3px solid #ffffff;
+            border-left: 3px solid #ffffff;
+            border-bottom: 3px solid #808080;
+            border-right: 3px solid #808080;
         }
 
         .tool-emoji {
-            font-size: 26px; /* Kleiner gemacht */
+            font-size: 20px;
             margin-bottom: 2px;
         }
 
         .tool-text {
-            font-size: 11px; /* Kleiner gemacht */
+            font-size: 9px;
             font-weight: bold;
             text-align: center;
             line-height: 1.1;
@@ -390,9 +393,7 @@
 
         .tool-btn:disabled .tool-emoji { filter: grayscale(100%) opacity(50%); }
 
-        .ready-blink {
-            animation: blink-yellow-anim 0.5s infinite alternate !important;
-        }
+        .ready-blink { animation: blink-yellow-anim 0.5s infinite alternate !important; }
 
         @keyframes blink-yellow-anim {
             0% { background-color: #ffffff; }
@@ -414,40 +415,75 @@
             background-color: rgba(0, 255, 255, 0.2) !important;
         }
 
-        .scan-anim {
-            animation: scan-pulse 1s forwards;
-            z-index: 10;
-        }
-
+        /* Powerup Animations */
+        .scan-anim { animation: scan-pulse 1s forwards; z-index: 10; }
         @keyframes scan-pulse {
             0% { background-color: #00ffff; box-shadow: inset 0 0 15px #00ffff; }
             50% { background-color: #008080; box-shadow: inset 0 0 25px #00ffff; }
             100% { background-color: #c0c0c0; box-shadow: none; }
         }
 
-        /* NEU: Eigene Animation für den Cross/Edge Scan */
-        .cross-scan-anim {
-            animation: cross-scan-pulse 1s forwards;
-            z-index: 10;
-        }
-
+        .cross-scan-anim { animation: cross-scan-pulse 1s forwards; z-index: 10; }
         @keyframes cross-scan-pulse {
             0% { background-color: #ff00ff; box-shadow: inset 0 0 15px #ff00ff; }
             50% { background-color: #800080; box-shadow: inset 0 0 25px #ff00ff; }
             100% { background-color: #c0c0c0; box-shadow: none; }
         }
 
-        /* NEU: Mega Nuke Scan Animation */
-        .nuke-scan-anim {
-            animation: nuke-pulse 1s forwards;
-            z-index: 15;
-        }
-
+        .nuke-scan-anim { animation: nuke-pulse 1s forwards; z-index: 15; }
         @keyframes nuke-pulse {
             0% { background-color: #ffff00; box-shadow: inset 0 0 20px #ffff00; transform: scale(1); }
             30% { background-color: #ff8800; box-shadow: inset 0 0 40px #ff8800; transform: scale(1.1); z-index: 20;}
             70% { background-color: #ff0000; box-shadow: inset 0 0 50px #ff0000; transform: scale(1.15); z-index: 20;}
             100% { background-color: #c0c0c0; box-shadow: none; transform: scale(1); }
+        }
+
+        .xray-anim {
+            background-color: rgba(255, 0, 0, 0.5) !important;
+            box-shadow: inset 0 0 15px rgba(255,0,0,0.8);
+            transition: all 0.2s;
+            z-index: 25;
+        }
+
+        .meteor-anim {
+            animation: meteor-impact 0.5s ease-out forwards;
+            z-index: 20;
+        }
+        @keyframes meteor-impact {
+            0% { transform: translateY(-800px) scale(0.5); background-color: #ff5500; opacity: 0; }
+            50% { opacity: 1; }
+            80% { transform: translateY(0) scale(1.2); background-color: #ffaa00; box-shadow: inset 0 0 30px #ff0000; }
+            100% { transform: scale(1); background-color: #c0c0c0; box-shadow: none; }
+        }
+
+        .path-anim {
+            animation: path-step 0.4s forwards;
+            z-index: 10;
+        }
+        @keyframes path-step {
+            0% { background-color: #00ff00; box-shadow: inset 0 0 20px #00ff00; transform: scale(1.1); }
+            100% { background-color: #c0c0c0; transform: scale(1); }
+        }
+
+        /* Animations für X-Strike, Vortex */
+        .xstrike-anim {
+            animation: xstrike-flash 0.8s forwards;
+            z-index: 15;
+        }
+        @keyframes xstrike-flash {
+            0% { background-color: #ffaa00; box-shadow: inset 0 0 20px #ff0000; transform: scale(1.1); }
+            50% { background-color: #ff0000; box-shadow: inset 0 0 30px #ff0000; transform: scale(1.05); }
+            100% { background-color: #c0c0c0; box-shadow: none; transform: scale(1); }
+        }
+
+        .vortex-anim {
+            animation: vortex-pull 1s forwards;
+            z-index: 15;
+        }
+        @keyframes vortex-pull {
+            0% { background-color: #8a2be2; box-shadow: inset 0 0 20px #4b0082; transform: scale(1.1) rotate(0deg); }
+            50% { background-color: #000000; box-shadow: inset 0 0 40px #4b0082; transform: scale(0.4) rotate(180deg); }
+            100% { background-color: #c0c0c0; box-shadow: none; transform: scale(1) rotate(360deg); }
         }
 
         /* Totem of Undying Effect */
@@ -463,20 +499,14 @@
             transition: background 0.2s;
         }
         
-        .totem-overlay.active {
-            animation: golden-flash 1.5s forwards;
-        }
-        
+        .totem-overlay.active { animation: golden-flash 1.5s forwards; }
         .totem-icon {
             font-size: 180px;
             opacity: 0;
             transform: scale(0.1) translateY(50px);
             filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1));
         }
-        
-        .totem-overlay.active .totem-icon {
-            animation: totem-rise 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
+        .totem-overlay.active .totem-icon { animation: totem-rise 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
 
         @keyframes golden-flash {
             0% { background: rgba(255, 215, 0, 0.7); }
@@ -523,7 +553,6 @@
             100% { box-shadow: 0 0 15px 6px rgba(255, 136, 0, 0.8); transform: scale(1.1); }
         }
 
-        /* NEU: Kritzel Schriftart */
         .scribble-text {
             font-family: 'Kalam', cursive;
             color: #ff3333;
@@ -536,7 +565,6 @@
             filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
         }
 
-        /* NEU: Footer */
         .footer {
             position: fixed;
             bottom: 10px;
@@ -563,11 +591,10 @@
 </head>
 <body>
 
-    <!-- Totem of Undying Effect Container -->
     <div class="totem-overlay" id="totem-overlay">
         <div class="totem-icon">🛡️</div>
     </div>
-
+    
     <!-- Panning Container für Drag & Drop -->
     <div class="game-container" id="game-container">
         <div class="window" id="game-window">
@@ -613,31 +640,40 @@
         <div class="shield-indicator" id="shield-indicator" style="display: none;">🛡️ Shields: 0/0</div>
     </div>
 
-    <!-- Powerups Sidebar (Rechts) -->
+    <!-- Powerups Sidebar (Rechts, 2-Spalten-Grid) -->
     <div class="powerups-sidebar">
-        <!-- 3x3 und 10x10 nebeneinander -->
-        <div class="powerup-row">
-            <button id="btn-area-scan" class="tool-btn">
-                <span class="tool-emoji">🔍</span>
-                <span id="txt-area-scan" class="tool-text">3x3<br>READY</span>
-            </button>
-            <button id="btn-nuke-scan" class="tool-btn">
-                <span class="tool-emoji">☢️</span>
-                <span id="txt-nuke-scan" class="tool-text">10x10<br>READY</span>
-            </button>
-        </div>
-        <!-- Andere zentriert darunter -->
+        <button id="btn-area-scan" class="tool-btn">
+            <span class="tool-emoji">🔍</span><span id="txt-area-scan" class="tool-text">3x3<br>READY</span>
+        </button>
+        <button id="btn-nuke-scan" class="tool-btn">
+            <span class="tool-emoji">☢️</span><span id="txt-nuke-scan" class="tool-text">10x10<br>READY</span>
+        </button>
         <button id="btn-cross-scan" class="tool-btn">
-            <span class="tool-emoji">🎯</span>
-            <span id="txt-cross-scan" class="tool-text">Cross<br>READY</span>
+            <span class="tool-emoji">🎯</span><span id="txt-cross-scan" class="tool-text">Cross<br>READY</span>
+        </button>
+        <button id="btn-pathfinder" class="tool-btn">
+            <span class="tool-emoji">🧭</span><span id="txt-pathfinder" class="tool-text">Pfad<br>READY</span>
         </button>
         <button id="btn-half-scan" class="tool-btn">
-            <span class="tool-emoji">📡</span>
-            <span id="txt-half-scan" class="tool-text">1/2 💣<br>READY</span>
+            <span class="tool-emoji">📡</span><span id="txt-half-scan" class="tool-text">1/2 💣<br>READY</span>
         </button>
         <button id="btn-safe-scan" class="tool-btn">
-            <span class="tool-emoji">🌟</span>
-            <span id="txt-safe-scan" class="tool-text">1/2 🌟<br>READY</span>
+            <span class="tool-emoji">🌟</span><span id="txt-safe-scan" class="tool-text">1/2 🌟<br>READY</span>
+        </button>
+        <button id="btn-xray" class="tool-btn">
+            <span class="tool-emoji">👁️</span><span id="txt-xray" class="tool-text">X-Ray<br>READY</span>
+        </button>
+        <button id="btn-meteor" class="tool-btn">
+            <span class="tool-emoji">☄️</span><span id="txt-meteor" class="tool-text">Meteor<br>READY</span>
+        </button>
+        <button id="btn-xstrike" class="tool-btn">
+            <span class="tool-emoji">⚔️</span><span id="txt-xstrike" class="tool-text">X-Strike<br>READY</span>
+        </button>
+        <button id="btn-vortex" class="tool-btn">
+            <span class="tool-emoji">🌀</span><span id="txt-vortex" class="tool-text">Vortex<br>READY</span>
+        </button>
+        <button id="btn-forge" class="tool-btn">
+            <span class="tool-emoji">⚒️</span><span id="txt-forge" class="tool-text">Forge<br>READY</span>
         </button>
     </div>
 
@@ -646,20 +682,25 @@
 
     <!-- Help Dialog -->
     <div class="dialog-overlay" id="help-dialog">
-        <div class="dialog-box" style="min-width: 450px; max-width: 550px;">
+        <div class="dialog-box" style="min-width: 450px; max-width: 600px;">
             <div class="dialog-header">
                 <span>Help & Mechanics</span>
                 <button id="close-help-btn" style="background: none; border: none; color: white; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 16px;">X</button>
             </div>
-            <div class="dialog-content" style="padding: 15px; text-align: left; font-size: 15px;">
+            <div class="dialog-content" style="padding: 15px; text-align: left; font-size: 14px;">
                 <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
-                    <li style="margin-bottom: 8px;"><b>Map Dragging & Zooming:</b> Click and drag the background to move. Use your mouse wheel or pinch with two fingers to zoom in and out!</li>
-                    <li style="margin-bottom: 8px;"><b>Bomb Counter:</b> Shows total hidden bombs MINUS the flags you've placed.</li>
-                    <li style="margin-bottom: 8px;"><b>Timer:</b> Tracks seconds passed since your first click in the current level.</li>
-                    <li style="margin-bottom: 8px;"><b>Click to Reset (Smiley):</b> Instantly restart the current level anytime.</li>
-                    <li style="margin-bottom: 8px;"><b>Save / Load:</b> Generates a 1000-character secure code (Level, Score, Fails, Cooldowns). Copy to save, paste to resume!</li>
-                    <li style="margin-bottom: 8px;"><b>Total Fails:</b> Tracks your total mine explosions across all sessions.</li>
-                    <li><b>Powerups (Right Sidebar):</b> Use 🔍, 🎯, ☢️, 📡 and 🌟 to scan! Every 5 levels, you gain an automatic Shield 🛡️ to survive mine hits!</li>
+                    <li style="margin-bottom: 6px;"><b>Map Dragging & Zooming:</b> Click and drag the background to move. Use your mouse wheel or pinch to zoom!</li>
+                    <li style="margin-bottom: 6px;"><b>Save / Load:</b> Generates a code (Level, Score, Fails, Cooldowns). Copy to save, paste to resume!</li>
+                    <li style="margin-bottom: 6px;"><b>Shields 🛡️:</b> Every 5 levels, you gain an automatic Shield to survive a mine hit!</li>
+                    <li><b>11 Epic Power-Ups (Right Sidebar):</b> 
+                        <ul style="margin-top: 4px; padding-left: 15px; list-style-type: square;">
+                            <li>🔍 3x3 Scan | ☢️ 10x10 Nuke | 🎯 Cross Scan | 🧭 Pathfinder (Safe Route)</li>
+                            <li>📡 1/2 Mines | 🌟 1/2 Safe | 👁️ X-Ray | ☄️ Meteor Strikes</li>
+                            <li>⚔️ <b>X-Strike:</b> Diagonal laser strike!</li>
+                            <li>🌀 <b>Vortex:</b> A spiral vortex with one row gaps!</li>
+                            <li>⚒️ <b>Forge:</b> Instantly grants +1 Shield!</li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -696,7 +737,7 @@
         </div>
     </div>
 
-    <!-- NEU: Made by Footer -->
+    <!-- Made by Footer -->
     <div class="footer">
         Made by Kinetx | <a href="https://discordapp.com/users/1056147064569987163" target="_blank">Discord</a>
     </div>
@@ -720,44 +761,43 @@
         let secondsElapsed = 0;
         let animationTimeouts = []; 
 
-        // Cooldown & Board Management
-        let lastAreaScan = 0;
-        let lastCrossScan = 0;
-        let lastNukeScan = 0;
-        let lastHalfScan = 0;
-        let lastSafeScan = 0;
-        const AREA_SCAN_CD = 180 * 1000; // Jetzt 3 Minuten (180 Sekunden)
-        const CROSS_SCAN_CD = 60 * 1000; 
-        const NUKE_SCAN_CD = 600 * 1000; // 10 Minuten
-        const HALF_SCAN_CD = 300 * 1000; 
-        const SAFE_SCAN_CD = 360 * 1000; 
+        // Cooldowns
+        let lastAreaScan = 0, lastCrossScan = 0, lastNukeScan = 0;
+        let lastHalfScan = 0, lastSafeScan = 0;
+        let lastXray = 0, lastMeteor = 0, lastPathfinder = 0;
+        let lastXStrike = 0, lastVortex = 0, lastForge = 0;
+        
+        const AREA_SCAN_CD = 180 * 1000;      // 3 Min
+        const PATHFINDER_CD = 240 * 1000;     // 4 Min
+        const CROSS_SCAN_CD = 240 * 1000;     // 4 Min
+        const XRAY_CD = 300 * 1000;           // 5 Min
+        const XSTRIKE_CD = 300 * 1000;        // 5 Min
+        const METEOR_CD = 360 * 1000;         // 6 Min
+        const SAFE_SCAN_CD = 360 * 1000;      // 6 Min
+        const HALF_SCAN_CD = 300 * 1000;      // 5 Min
+        const VORTEX_CD = 420 * 1000;         // 7 Min
+        const FORGE_CD = 600 * 1000;          // 10 Min
+        const NUKE_SCAN_CD = 600 * 1000;      // 10 Min
+
         let currentBoardId = 0;
-        let areaScanWasOnCooldown = false;
-        let crossScanWasOnCooldown = false;
-        let nukeScanWasOnCooldown = false;
-        let halfScanWasOnCooldown = false;
-        let safeScanWasOnCooldown = false;
-        let isTargetingAreaScan = false;
-        let isTargetingCrossScan = false;
-        let isTargetingNukeScan = false;
+        let areaScanWasOnCooldown = false, crossScanWasOnCooldown = false, nukeScanWasOnCooldown = false;
+        let halfScanWasOnCooldown = false, safeScanWasOnCooldown = false;
+        let xrayWasOnCooldown = false, meteorWasOnCooldown = false, pathfinderWasOnCooldown = false;
+        let xstrikeWasOnCooldown = false, vortexWasOnCooldown = false, forgeWasOnCooldown = false;
+        
+        // Targeting Modes
+        let isTargetingAreaScan = false, isTargetingCrossScan = false;
+        let isTargetingNukeScan = false, isTargetingPathfinder = false;
+        let isTargetingXStrike = false, isTargetingVortex = false;
 
         // Tutorial Status
         let tutorialStep = 0;
         let tutorialTimeout = null;
 
-        // Drag & Drop Map (Transform basiert)
-        let isDraggingMap = false;
-        let dragStartX = 0;
-        let dragStartY = 0;
-        let mapX = 0;
-        let mapY = 0;
-        let tempMapX = 0;
-        let tempMapY = 0;
-        
-        // NEU: Zoom Parameter
-        let mapScale = 1;
-        let initialPinchDistance = null;
-        let initialScale = 1;
+        // Drag & Drop Map
+        let isDraggingMap = false, dragStartX = 0, dragStartY = 0;
+        let mapX = 0, mapY = 0, tempMapX = 0, tempMapY = 0;
+        let mapScale = 1, initialPinchDistance = null, initialScale = 1;
 
         // DOM Elemente
         const gameContainerEl = document.getElementById('game-container');
@@ -787,29 +827,30 @@
         const helpDialog = document.getElementById('help-dialog'); 
         const closeHelpBtn = document.getElementById('close-help-btn'); 
 
-        const btnAreaScan = document.getElementById('btn-area-scan');
-        const txtAreaScan = document.getElementById('txt-area-scan');
-        const btnCrossScan = document.getElementById('btn-cross-scan');
-        const txtCrossScan = document.getElementById('txt-cross-scan');
-        const btnNukeScan = document.getElementById('btn-nuke-scan');
-        const txtNukeScan = document.getElementById('txt-nuke-scan');
-        const btnHalfScan = document.getElementById('btn-half-scan');
-        const txtHalfScan = document.getElementById('txt-half-scan');
-        const btnSafeScan = document.getElementById('btn-safe-scan');
-        const txtSafeScan = document.getElementById('txt-safe-scan');
+        const btnAreaScan = document.getElementById('btn-area-scan'), txtAreaScan = document.getElementById('txt-area-scan');
+        const btnCrossScan = document.getElementById('btn-cross-scan'), txtCrossScan = document.getElementById('txt-cross-scan');
+        const btnNukeScan = document.getElementById('btn-nuke-scan'), txtNukeScan = document.getElementById('txt-nuke-scan');
+        const btnHalfScan = document.getElementById('btn-half-scan'), txtHalfScan = document.getElementById('txt-half-scan');
+        const btnSafeScan = document.getElementById('btn-safe-scan'), txtSafeScan = document.getElementById('txt-safe-scan');
+        const btnXray = document.getElementById('btn-xray'), txtXray = document.getElementById('txt-xray');
+        const btnMeteor = document.getElementById('btn-meteor'), txtMeteor = document.getElementById('txt-meteor');
+        const btnPathfinder = document.getElementById('btn-pathfinder'), txtPathfinder = document.getElementById('txt-pathfinder');
+        const btnXStrike = document.getElementById('btn-xstrike'), txtXStrike = document.getElementById('txt-xstrike');
+        const btnVortex = document.getElementById('btn-vortex'), txtVortex = document.getElementById('txt-vortex');
+        const btnForge = document.getElementById('btn-forge'), txtForge = document.getElementById('txt-forge');
 
-        const DIRECTIONS = [
-            [-1, -1], [-1, 0], [-1, 1],
-            [0, -1],           [0, 1],
-            [1, -1],  [1, 0],  [1, 1]
-        ];
+        const DIRECTIONS = [ [-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1],  [1, 0],  [1, 1] ];
 
         // --- Save & Load Logik ---
         const SAVE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
 
         function generateSaveCode() {
             const dataStr = JSON.stringify({ 
-                l: level, s: totalScore, a: lastAreaScan, c: lastCrossScan, n: lastNukeScan, h: lastHalfScan, f: totalFails, r: lastSafeScan 
+                l: level, s: totalScore, f: totalFails, 
+                a: lastAreaScan, c: lastCrossScan, n: lastNukeScan, 
+                h: lastHalfScan, r: lastSafeScan,
+                x: lastXray, m: lastMeteor, p: lastPathfinder,
+                xs: lastXStrike, vx: lastVortex, fg: lastForge
             });
             const data = btoa(dataStr);
             const payload = `~${data}~`;
@@ -832,7 +873,6 @@
             return null;
         }
 
-        // Hilfsfunktion um Translation & Scale anzuwenden
         function updateMapTransform() {
             gameContainerEl.style.transform = `translate(${mapX}px, ${mapY}px) scale(${mapScale})`;
         }
@@ -843,26 +883,21 @@
             slMessage.style.color = "#000";
             saveLoadDialog.style.display = 'flex';
         });
-
         closeSlBtn.addEventListener('click', () => saveLoadDialog.style.display = 'none');
-
         copySaveBtn.addEventListener('click', () => {
             slTextarea.select();
             document.execCommand('copy');
-            const originalText = copySaveBtn.textContent;
             copySaveBtn.textContent = "Copied!";
-            setTimeout(() => copySaveBtn.textContent = originalText, 2000);
+            setTimeout(() => copySaveBtn.textContent = "Copy Save Code", 2000);
         });
-
         loadSaveBtn.addEventListener('click', () => {
-            const code = slTextarea.value.trim();
-            const data = parseSaveCode(code);
+            const data = parseSaveCode(slTextarea.value.trim());
             if (data) {
-                level = data.l; totalScore = data.s;
-                lastAreaScan = data.a || 0; lastCrossScan = data.c || 0; 
-                lastNukeScan = data.n || 0;
+                level = data.l; totalScore = data.s; totalFails = data.f || 0; 
+                lastAreaScan = data.a || 0; lastCrossScan = data.c || 0; lastNukeScan = data.n || 0;
                 lastHalfScan = data.h || 0; lastSafeScan = data.r || 0;
-                totalFails = data.f || 0; 
+                lastXray = data.x || 0; lastMeteor = data.m || 0; lastPathfinder = data.p || 0;
+                lastXStrike = data.xs || 0; lastVortex = data.vx || 0; lastForge = data.fg || 0;
                 saveLoadDialog.style.display = 'none';
                 initLevel();
                 showTutorial("Game successfully loaded!", null, 3000);
@@ -872,1014 +907,621 @@
             }
         });
 
-        // --- Drag & Drop Map (Translational Panning) ---
+        // --- Drag & Drop Map & Zoom ---
         document.addEventListener('mousedown', (e) => {
-            if (e.button !== 0) return; 
-            if (e.target.closest('.dialog-overlay') || e.target.closest('.window-title-bar') || e.target.id === 'smiley-btn' || e.target.closest('.powerups-sidebar') || e.target.closest('.footer')) return;
-            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan) return; 
-            
-            dragStartX = e.clientX;
-            dragStartY = e.clientY;
-            tempMapX = mapX;
-            tempMapY = mapY;
+            if (e.button !== 0 || e.target.closest('.dialog-overlay') || e.target.closest('.window-title-bar') || e.target.id === 'smiley-btn' || e.target.closest('.powerups-sidebar') || e.target.closest('.footer')) return;
+            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan || isTargetingPathfinder || isTargetingXStrike || isTargetingVortex) return; 
+            dragStartX = e.clientX; dragStartY = e.clientY;
+            tempMapX = mapX; tempMapY = mapY;
             isDraggingMap = false;
         });
 
         document.addEventListener('mousemove', (e) => {
-            if (e.buttons !== 1 || isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan) return; 
-            const dx = e.clientX - dragStartX;
-            const dy = e.clientY - dragStartY;
-            
-            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-                isDraggingMap = true;
-            }
-
-            if (isDraggingMap) {
-                mapX = tempMapX + dx;
-                mapY = tempMapY + dy;
-                updateMapTransform();
-            }
+            if (e.buttons !== 1 || isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan || isTargetingPathfinder || isTargetingXStrike || isTargetingVortex) return; 
+            const dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) isDraggingMap = true;
+            if (isDraggingMap) { mapX = tempMapX + dx; mapY = tempMapY + dy; updateMapTransform(); }
         });
+        document.addEventListener('mouseup', () => { setTimeout(() => { isDraggingMap = false; }, 50); });
 
-        document.addEventListener('mouseup', () => {
-            setTimeout(() => { isDraggingMap = false; }, 50);
-        });
-
-        // Mausrad Zoom
         document.addEventListener('wheel', (e) => {
             if (e.target.closest('.dialog-overlay') || e.target.closest('.window-title-bar') || e.target.closest('.powerups-sidebar') || e.target.closest('.footer')) return;
             e.preventDefault(); 
-            
-            const zoomSpeed = 0.0015;
-            mapScale += e.deltaY * -zoomSpeed;
-            mapScale = Math.min(Math.max(0.2, mapScale), 3); 
-            
+            mapScale = Math.min(Math.max(0.2, mapScale + e.deltaY * -0.0015), 3); 
             updateMapTransform();
         }, { passive: false });
 
-        // Touch & Pinch-to-Zoom (Handy/Tablet)
         document.addEventListener('touchstart', (e) => {
             if (e.target.closest('.dialog-overlay') || e.target.closest('.window-title-bar') || e.target.id === 'smiley-btn' || e.target.closest('.powerups-sidebar') || e.target.closest('.footer')) return;
-            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan) return;
-
+            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan || isTargetingPathfinder || isTargetingXStrike || isTargetingVortex) return;
             if (e.touches.length === 1) {
-                dragStartX = e.touches[0].clientX;
-                dragStartY = e.touches[0].clientY;
-                tempMapX = mapX;
-                tempMapY = mapY;
-                isDraggingMap = false;
+                dragStartX = e.touches[0].clientX; dragStartY = e.touches[0].clientY;
+                tempMapX = mapX; tempMapY = mapY; isDraggingMap = false;
             } else if (e.touches.length === 2) {
-                initialPinchDistance = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
+                initialPinchDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
                 initialScale = mapScale;
             }
         }, { passive: false });
 
         document.addEventListener('touchmove', (e) => {
-            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan) return;
-
+            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan || isTargetingPathfinder || isTargetingXStrike || isTargetingVortex) return;
             if (e.touches.length === 1) {
-                const dx = e.touches[0].clientX - dragStartX;
-                const dy = e.touches[0].clientY - dragStartY;
-                
-                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-                    isDraggingMap = true;
-                    if (e.cancelable) e.preventDefault(); 
-                }
-
-                if (isDraggingMap) {
-                    mapX = tempMapX + dx;
-                    mapY = tempMapY + dy;
-                    updateMapTransform();
-                }
+                const dx = e.touches[0].clientX - dragStartX, dy = e.touches[0].clientY - dragStartY;
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) { isDraggingMap = true; if (e.cancelable) e.preventDefault(); }
+                if (isDraggingMap) { mapX = tempMapX + dx; mapY = tempMapY + dy; updateMapTransform(); }
             } else if (e.touches.length === 2) {
                 if (e.cancelable) e.preventDefault(); 
-                const currentPinchDistance = Math.hypot(
-                    e.touches[0].clientX - e.touches[1].clientX,
-                    e.touches[0].clientY - e.touches[1].clientY
-                );
-                
-                const pinchRatio = currentPinchDistance / initialPinchDistance;
-                mapScale = initialScale * pinchRatio;
-                mapScale = Math.min(Math.max(0.2, mapScale), 3);
-                
+                const pinchRatio = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY) / initialPinchDistance;
+                mapScale = Math.min(Math.max(0.2, initialScale * pinchRatio), 3);
                 updateMapTransform();
             }
         }, { passive: false });
-
-        document.addEventListener('touchend', (e) => {
-            if (e.touches.length === 0) {
-                setTimeout(() => { isDraggingMap = false; }, 50);
-            }
-        });
+        document.addEventListener('touchend', (e) => { if (e.touches.length === 0) setTimeout(() => { isDraggingMap = false; }, 50); });
 
         // --- UI Hilfsfunktionen ---
-        function formatNumber(num) {
-            if (num < 0) return "-" + Math.abs(num).toString().padStart(2, '0');
-            return num.toString().padStart(3, '0');
-        }
+        function formatNumber(num) { return num < 0 ? "-" + Math.abs(num).toString().padStart(2, '0') : num.toString().padStart(3, '0'); }
 
         function updateUI() {
             mineCounterEl.textContent = formatNumber(totalMines - flagsPlaced - defusedCount);
             titleLevelEl.textContent = `Level ${level}`;
             titleScoreEl.textContent = totalScore;
             titleFailsEl.textContent = totalFails; 
-
-            if (maxShields > 0) {
+            if (maxShields > 0 || currentShields > 0) {
                 shieldIndicator.style.display = 'inline-block';
                 shieldIndicator.textContent = `🛡️ Shields: ${currentShields}/${maxShields}`;
                 shieldIndicator.style.transform = 'scale(1.1)';
                 setTimeout(() => { shieldIndicator.style.transform = 'scale(1)'; }, 200);
-            } else {
-                shieldIndicator.style.display = 'none';
-            }
+            } else { shieldIndicator.style.display = 'none'; }
         }
 
         function startTimer() {
             if (timerInterval) clearInterval(timerInterval);
-            secondsElapsed = 0;
-            timerEl.textContent = formatNumber(secondsElapsed);
+            secondsElapsed = 0; timerEl.textContent = formatNumber(0);
             timerInterval = setInterval(() => {
                 secondsElapsed++;
-                if (secondsElapsed > 999) secondsElapsed = 999;
-                timerEl.textContent = formatNumber(secondsElapsed);
+                timerEl.textContent = formatNumber(Math.min(secondsElapsed, 999));
             }, 1000);
         }
+        function stopTimer() { if (timerInterval) clearInterval(timerInterval); }
 
-        function stopTimer() {
-            if (timerInterval) clearInterval(timerInterval);
+        function updateCooldownUI(btn, txt, lastTime, cdTime, isTargeting, nameHTML, wasOnCdFlag, setWasOnCdFlag) {
+            const left = Math.max(0, cdTime - (Date.now() - lastTime));
+            if (left === 0) {
+                if (wasOnCdFlag) {
+                    setWasOnCdFlag(false);
+                    btn.classList.add('ready-blink');
+                    setTimeout(() => btn.classList.remove('ready-blink'), 3000);
+                }
+                if (!isTargeting) {
+                    btn.disabled = false;
+                    txt.innerHTML = `${nameHTML}<br>READY`;
+                }
+            } else {
+                setWasOnCdFlag(true);
+                btn.disabled = true;
+                btn.classList.remove('ready-blink');
+                if (isTargeting) cancelTargetingMode();
+                const secs = Math.ceil(left / 1000);
+                txt.innerHTML = `${nameHTML}<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
+            }
         }
 
         // --- Cooldown Timer Loop ---
         setInterval(() => {
             if (gameOver) {
-                btnAreaScan.disabled = true;
-                btnCrossScan.disabled = true;
-                btnNukeScan.disabled = true;
-                btnHalfScan.disabled = true;
-                btnSafeScan.disabled = true;
+                btnAreaScan.disabled = btnCrossScan.disabled = btnNukeScan.disabled = btnHalfScan.disabled = true;
+                btnSafeScan.disabled = btnXray.disabled = btnMeteor.disabled = btnPathfinder.disabled = true;
+                btnXStrike.disabled = btnVortex.disabled = btnForge.disabled = true;
                 return;
             }
-
-            const now = Date.now();
-            
-            // Area Scan (3x3)
-            const areaLeft = Math.max(0, AREA_SCAN_CD - (now - lastAreaScan));
-            if (areaLeft === 0) {
-                if (areaScanWasOnCooldown) {
-                    areaScanWasOnCooldown = false;
-                    btnAreaScan.classList.add('ready-blink');
-                    setTimeout(() => btnAreaScan.classList.remove('ready-blink'), 3000);
-                }
-                if (!isTargetingAreaScan) {
-                    btnAreaScan.disabled = false;
-                    txtAreaScan.innerHTML = "3x3<br>READY";
-                }
-            } else {
-                areaScanWasOnCooldown = true;
-                btnAreaScan.disabled = true;
-                btnAreaScan.classList.remove('ready-blink');
-                
-                if (isTargetingAreaScan) cancelTargetingMode();
-                
-                const secs = Math.ceil(areaLeft / 1000);
-                txtAreaScan.innerHTML = `3x3<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
-            }
-
-            // Cross Scan
-            const crossLeft = Math.max(0, CROSS_SCAN_CD - (now - lastCrossScan));
-            if (crossLeft === 0) {
-                if (crossScanWasOnCooldown) {
-                    crossScanWasOnCooldown = false;
-                    btnCrossScan.classList.add('ready-blink');
-                    setTimeout(() => btnCrossScan.classList.remove('ready-blink'), 3000);
-                }
-                if (!isTargetingCrossScan) {
-                    btnCrossScan.disabled = false;
-                    txtCrossScan.innerHTML = "Cross<br>READY";
-                }
-            } else {
-                crossScanWasOnCooldown = true;
-                btnCrossScan.disabled = true;
-                btnCrossScan.classList.remove('ready-blink');
-                
-                if (isTargetingCrossScan) cancelTargetingMode();
-                
-                const secs = Math.ceil(crossLeft / 1000);
-                txtCrossScan.innerHTML = `Cross<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
-            }
-
-            // Nuke Scan (10x10)
-            const nukeLeft = Math.max(0, NUKE_SCAN_CD - (now - lastNukeScan));
-            if (nukeLeft === 0) {
-                if (nukeScanWasOnCooldown) {
-                    nukeScanWasOnCooldown = false;
-                    btnNukeScan.classList.add('ready-blink');
-                    setTimeout(() => btnNukeScan.classList.remove('ready-blink'), 3000);
-                }
-                if (!isTargetingNukeScan) {
-                    btnNukeScan.disabled = false;
-                    txtNukeScan.innerHTML = "10x10<br>READY";
-                }
-            } else {
-                nukeScanWasOnCooldown = true;
-                btnNukeScan.disabled = true;
-                btnNukeScan.classList.remove('ready-blink');
-                
-                if (isTargetingNukeScan) cancelTargetingMode();
-                
-                const secs = Math.ceil(nukeLeft / 1000);
-                txtNukeScan.innerHTML = `10x10<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
-            }
-
-            // Half Scan
-            const halfLeft = Math.max(0, HALF_SCAN_CD - (now - lastHalfScan));
-            if (halfLeft === 0) {
-                if (halfScanWasOnCooldown) {
-                    halfScanWasOnCooldown = false;
-                    btnHalfScan.classList.add('ready-blink');
-                    setTimeout(() => btnHalfScan.classList.remove('ready-blink'), 3000);
-                }
-                btnHalfScan.disabled = false;
-                txtHalfScan.innerHTML = "1/2 💣<br>READY";
-            } else {
-                halfScanWasOnCooldown = true;
-                btnHalfScan.disabled = true;
-                btnHalfScan.classList.remove('ready-blink');
-                const secs = Math.ceil(halfLeft / 1000);
-                txtHalfScan.innerHTML = `1/2 💣<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
-            }
-
-            // Safe Scan (Half Reveal)
-            const safeLeft = Math.max(0, SAFE_SCAN_CD - (now - lastSafeScan));
-            if (safeLeft === 0) {
-                if (safeScanWasOnCooldown) {
-                    safeScanWasOnCooldown = false;
-                    btnSafeScan.classList.add('ready-blink');
-                    setTimeout(() => btnSafeScan.classList.remove('ready-blink'), 3000);
-                }
-                btnSafeScan.disabled = false;
-                txtSafeScan.innerHTML = "1/2 🌟<br>READY";
-            } else {
-                safeScanWasOnCooldown = true;
-                btnSafeScan.disabled = true;
-                btnSafeScan.classList.remove('ready-blink');
-                const secs = Math.ceil(safeLeft / 1000);
-                txtSafeScan.innerHTML = `1/2 🌟<br>${Math.floor(secs/60)}:${(secs%60).toString().padStart(2, '0')}`;
-            }
+            updateCooldownUI(btnAreaScan, txtAreaScan, lastAreaScan, AREA_SCAN_CD, isTargetingAreaScan, "3x3", areaScanWasOnCooldown, v => areaScanWasOnCooldown = v);
+            updateCooldownUI(btnCrossScan, txtCrossScan, lastCrossScan, CROSS_SCAN_CD, isTargetingCrossScan, "Cross", crossScanWasOnCooldown, v => crossScanWasOnCooldown = v);
+            updateCooldownUI(btnNukeScan, txtNukeScan, lastNukeScan, NUKE_SCAN_CD, isTargetingNukeScan, "10x10", nukeScanWasOnCooldown, v => nukeScanWasOnCooldown = v);
+            updateCooldownUI(btnHalfScan, txtHalfScan, lastHalfScan, HALF_SCAN_CD, false, "1/2 💣", halfScanWasOnCooldown, v => halfScanWasOnCooldown = v);
+            updateCooldownUI(btnSafeScan, txtSafeScan, lastSafeScan, SAFE_SCAN_CD, false, "1/2 🌟", safeScanWasOnCooldown, v => safeScanWasOnCooldown = v);
+            updateCooldownUI(btnPathfinder, txtPathfinder, lastPathfinder, PATHFINDER_CD, isTargetingPathfinder, "Pfad", pathfinderWasOnCooldown, v => pathfinderWasOnCooldown = v);
+            updateCooldownUI(btnXray, txtXray, lastXray, XRAY_CD, false, "X-Ray", xrayWasOnCooldown, v => xrayWasOnCooldown = v);
+            updateCooldownUI(btnMeteor, txtMeteor, lastMeteor, METEOR_CD, false, "Meteor", meteorWasOnCooldown, v => meteorWasOnCooldown = v);
+            updateCooldownUI(btnXStrike, txtXStrike, lastXStrike, XSTRIKE_CD, isTargetingXStrike, "X-Strike", xstrikeWasOnCooldown, v => xstrikeWasOnCooldown = v);
+            updateCooldownUI(btnVortex, txtVortex, lastVortex, VORTEX_CD, isTargetingVortex, "Vortex", vortexWasOnCooldown, v => vortexWasOnCooldown = v);
+            updateCooldownUI(btnForge, txtForge, lastForge, FORGE_CD, false, "Forge", forgeWasOnCooldown, v => forgeWasOnCooldown = v);
         }, 500);
 
-        // --- Tutorial Funktionen ---
         function showTutorial(text, highlightTarget = null, autoHideMs = 0) {
-            tutorialBox.textContent = text;
-            tutorialBox.style.display = 'block';
-            
+            tutorialBox.textContent = text; tutorialBox.style.display = 'block';
             document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
-            if (highlightTarget) {
-                const el = highlightTarget.element || highlightTarget; 
-                el.classList.add('tutorial-highlight');
-            }
-
+            if (highlightTarget) { (highlightTarget.element || highlightTarget).classList.add('tutorial-highlight'); }
             if (tutorialTimeout) clearTimeout(tutorialTimeout);
             if (autoHideMs > 0) tutorialTimeout = setTimeout(hideTutorial, autoHideMs);
         }
-
         function hideTutorial() {
             tutorialBox.style.display = 'none';
             document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
         }
 
-        // --- Help Dialog Logic ---
-        helpBtn.addEventListener('click', () => {
-            helpDialog.style.display = 'flex';
-        });
+        helpBtn.addEventListener('click', () => helpDialog.style.display = 'flex');
+        closeHelpBtn.addEventListener('click', () => helpDialog.style.display = 'none');
 
-        closeHelpBtn.addEventListener('click', () => {
-            helpDialog.style.display = 'none';
-        });
+        // --- Target & Execution ---
+        function clearTargetHighlights() { document.querySelectorAll('.target-highlight').forEach(el => el.classList.remove('target-highlight')); }
 
-        // --- Tool / Powerup Logic ---
         function updateTargetHighlights(centerR, centerC) {
             clearTargetHighlights();
             if (isTargetingAreaScan) {
-                for(let dr=-1; dr<=1; dr++) {
-                    for(let dc=-1; dc<=1; dc++) {
-                        const nr = centerR + dr, nc = centerC + dc;
-                        if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
-                            board[nr][nc].element.classList.add('target-highlight');
-                        }
-                    }
+                for(let dr=-1; dr<=1; dr++) for(let dc=-1; dc<=1; dc++) {
+                    const nr = centerR + dr, nc = centerC + dc;
+                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) board[nr][nc].element.classList.add('target-highlight');
                 }
             } else if (isTargetingCrossScan) {
-                // Das Kreuz PLUS die gesamten äußeren Ränder highlighten
-                for(let r=0; r<gridSize; r++) {
-                    for(let c=0; c<gridSize; c++) {
-                        if (r === centerR || c === centerC || r === 0 || r === gridSize - 1 || c === 0 || c === gridSize - 1) {
-                            board[r][c].element.classList.add('target-highlight');
-                        }
-                    }
+                for(let r=0; r<gridSize; r++) for(let c=0; c<gridSize; c++) {
+                    if (r === centerR || c === centerC || r === 0 || r === gridSize - 1 || c === 0 || c === gridSize - 1) board[r][c].element.classList.add('target-highlight');
                 }
             } else if (isTargetingNukeScan) {
-                // Massive 10x10 Area (von -4 bis +5 ausgehend vom Zentrum = 10 Gitter)
-                for(let dr=-4; dr<=5; dr++) {
-                    for(let dc=-4; dc<=5; dc++) {
-                        const nr = centerR + dr, nc = centerC + dc;
-                        if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
-                            board[nr][nc].element.classList.add('target-highlight');
-                        }
-                    }
+                for(let dr=-4; dr<=5; dr++) for(let dc=-4; dc<=5; dc++) {
+                    const nr = centerR + dr, nc = centerC + dc;
+                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) board[nr][nc].element.classList.add('target-highlight');
                 }
+            } else if (isTargetingPathfinder) {
+                board[centerR][centerC].element.classList.add('target-highlight');
+            } else if (isTargetingXStrike) {
+                for(let r=0; r<gridSize; r++) for(let c=0; c<gridSize; c++) {
+                    if (Math.abs(r - centerR) === Math.abs(c - centerC)) board[r][c].element.classList.add('target-highlight');
+                }
+            } else if (isTargetingVortex) {
+                board[centerR][centerC].element.classList.add('target-highlight');
             }
-        }
-
-        function clearTargetHighlights() {
-            document.querySelectorAll('.target-highlight').forEach(el => el.classList.remove('target-highlight'));
         }
 
         function cancelTargetingMode() {
-            isTargetingAreaScan = false;
-            isTargetingCrossScan = false;
-            isTargetingNukeScan = false;
+            isTargetingAreaScan = isTargetingCrossScan = isTargetingNukeScan = isTargetingPathfinder = false;
+            isTargetingXStrike = isTargetingVortex = false;
             boardEl.classList.remove('targeting-mode');
             clearTargetHighlights();
-            btnAreaScan.classList.remove('targeting-blink');
-            btnCrossScan.classList.remove('targeting-blink');
-            btnNukeScan.classList.remove('targeting-blink');
-            if (Date.now() - lastAreaScan >= AREA_SCAN_CD) txtAreaScan.innerHTML = "3x3<br>READY";
-            if (Date.now() - lastCrossScan >= CROSS_SCAN_CD) txtCrossScan.innerHTML = "Cross<br>READY";
-            if (Date.now() - lastNukeScan >= NUKE_SCAN_CD) txtNukeScan.innerHTML = "10x10<br>READY";
+            btnAreaScan.classList.remove('targeting-blink'); btnCrossScan.classList.remove('targeting-blink');
+            btnNukeScan.classList.remove('targeting-blink'); btnPathfinder.classList.remove('targeting-blink');
+            btnXStrike.classList.remove('targeting-blink'); btnVortex.classList.remove('targeting-blink');
         }
 
-        // Area Scan Execution
-        function executeAreaScan(centerR, centerC) {
-            if (firstClick) {
-                startTimer();
-                placeMines(centerR, centerC);
-                firstClick = false;
-            }
-
-            const targetCells = [];
-            for(let dr=-1; dr<=1; dr++) {
-                for(let dc=-1; dc<=1; dc++) {
-                    const nr = centerR + dr, nc = centerC + dc;
-                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
-                        targetCells.push(board[nr][nc]);
-                    }
-                }
-            }
-            
-            lastAreaScan = Date.now();
-            btnAreaScan.disabled = true;
-            btnAreaScan.classList.remove('targeting-blink');
-            
-            targetCells.forEach(cell => cell.element.classList.add('scan-anim'));
-            
-            const boardId = currentBoardId;
-            setTimeout(() => {
-                if (boardId !== currentBoardId || gameOver) return; 
-
-                targetCells.forEach(cell => {
-                    cell.element.classList.remove('scan-anim');
-                    if (cell.isRevealed) return;
-
-                    if (cell.isMine) {
-                        if (!cell.isFlagged) {
-                            cell.isFlagged = true;
-                            setCellContent(cell, "⚑", true);
-                            cell.element.style.color = "#ff0000";
-                            flagsPlaced++;
-                        }
-                    } else {
-                        if (cell.isFlagged) {
-                            cell.isFlagged = false;
-                            flagsPlaced--;
-                            cell.element.innerHTML = "";
-                        }
-                        revealCell(cell.r, cell.c);
-                    }
-                });
-                updateUI();
-                checkWin();
-            }, 1000);
-
+        function activateTargetMode(btn, txtId, flagSetter) {
+            if (btn.disabled || gameOver) return;
             cancelTargetingMode();
+            flagSetter();
+            boardEl.classList.add('targeting-mode');
+            btn.classList.add('targeting-blink');
         }
 
-        // NEU: Cross Scan Execution
-        function executeCrossScan(centerR, centerC) {
-            if (firstClick) {
-                startTimer();
-                placeMines(centerR, centerC);
-                firstClick = false;
-            }
+        btnAreaScan.addEventListener('click', () => isTargetingAreaScan ? cancelTargetingMode() : activateTargetMode(btnAreaScan, txtAreaScan, () => isTargetingAreaScan=true));
+        btnCrossScan.addEventListener('click', () => isTargetingCrossScan ? cancelTargetingMode() : activateTargetMode(btnCrossScan, txtAreaScan, () => isTargetingCrossScan=true));
+        btnNukeScan.addEventListener('click', () => isTargetingNukeScan ? cancelTargetingMode() : activateTargetMode(btnNukeScan, txtAreaScan, () => isTargetingNukeScan=true));
+        btnPathfinder.addEventListener('click', () => isTargetingPathfinder ? cancelTargetingMode() : activateTargetMode(btnPathfinder, txtAreaScan, () => isTargetingPathfinder=true));
+        btnXStrike.addEventListener('click', () => isTargetingXStrike ? cancelTargetingMode() : activateTargetMode(btnXStrike, txtAreaScan, () => isTargetingXStrike=true));
+        btnVortex.addEventListener('click', () => isTargetingVortex ? cancelTargetingMode() : activateTargetMode(btnVortex, txtAreaScan, () => isTargetingVortex=true));
 
-            const targetCells = [];
-            let maxDist = 0;
-            
-            for(let r=0; r<gridSize; r++) {
-                for(let c=0; c<gridSize; c++) {
-                    if (r === centerR || c === centerC || r === 0 || r === gridSize - 1 || c === 0 || c === gridSize - 1) {
-                        targetCells.push(board[r][c]);
-                    }
-                }
-            }
-            
-            lastCrossScan = Date.now();
-            btnCrossScan.disabled = true;
-            btnCrossScan.classList.remove('targeting-blink');
-            
-            const boardId = currentBoardId;
-
-            targetCells.forEach(cell => {
-                const dist = Math.abs(cell.r - centerR) + Math.abs(cell.c - centerC);
-                maxDist = Math.max(maxDist, dist);
-                const delay = dist * 40;
-
-                setTimeout(() => {
-                    if (boardId !== currentBoardId || gameOver) return;
-                    cell.element.classList.add('cross-scan-anim');
-                }, delay);
-            });
-
-            setTimeout(() => {
-                if (boardId !== currentBoardId || gameOver) return; 
-
-                targetCells.forEach(cell => {
-                    cell.element.classList.remove('cross-scan-anim');
-                    if (cell.isRevealed) return;
-
-                    if (cell.isMine) {
-                        if (!cell.isFlagged) {
-                            cell.isFlagged = true;
-                            setCellContent(cell, "⚑", true);
-                            cell.element.style.color = "#ff0000";
-                            flagsPlaced++;
-                        }
-                    } else {
-                        if (cell.isFlagged) {
-                            cell.isFlagged = false;
-                            flagsPlaced--;
-                            cell.element.innerHTML = "";
-                        }
-                        revealCell(cell.r, cell.c);
-                    }
-                });
-                updateUI();
-                checkWin();
-            }, (maxDist * 40) + 1000);
-
-            cancelTargetingMode();
-        }
-
-        // NEU: Nuke Scan Execution (10x10)
-        function executeNukeScan(centerR, centerC) {
-            if (firstClick) {
-                startTimer();
-                placeMines(centerR, centerC);
-                firstClick = false;
-            }
-
-            const targetCells = [];
-            let maxDist = 0;
-            
-            // Sammelt riesiges 10x10 Raster (-4 bis +5)
-            for(let dr=-4; dr<=5; dr++) {
-                for(let dc=-4; dc<=5; dc++) {
-                    const nr = centerR + dr, nc = centerC + dc;
-                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
-                        targetCells.push(board[nr][nc]);
-                    }
-                }
-            }
-            
-            lastNukeScan = Date.now();
-            btnNukeScan.disabled = true;
-            btnNukeScan.classList.remove('targeting-blink');
-            
-            const boardId = currentBoardId;
-
-            // Gewaltiger Screen Shake
-            document.body.classList.add('screen-shake');
-            setTimeout(() => document.body.classList.remove('screen-shake'), 600);
-
-            // Quadratische Expansionswelle (Chebyshev-Distanz)
-            targetCells.forEach(cell => {
-                const dist = Math.max(Math.abs(cell.r - centerR), Math.abs(cell.c - centerC));
-                maxDist = Math.max(maxDist, dist);
-                const delay = dist * 150; // 150ms pro Ring nach außen
-
-                setTimeout(() => {
-                    if (boardId !== currentBoardId || gameOver) return;
-                    cell.element.classList.add('nuke-scan-anim');
-                }, delay);
-            });
-
-            // Nachdem der letzte Ring animiert ist
-            setTimeout(() => {
-                if (boardId !== currentBoardId || gameOver) return; 
-
-                targetCells.forEach(cell => {
-                    cell.element.classList.remove('nuke-scan-anim');
-                    if (cell.isRevealed) return;
-
-                    if (cell.isMine) {
-                        if (!cell.isFlagged) {
-                            cell.isFlagged = true;
-                            setCellContent(cell, "⚑", true);
-                            cell.element.style.color = "#ff0000";
-                            flagsPlaced++;
-                        }
-                    } else {
-                        if (cell.isFlagged) {
-                            cell.isFlagged = false;
-                            flagsPlaced--;
-                            cell.element.innerHTML = "";
-                        }
-                        revealCell(cell.r, cell.c);
-                    }
-                });
-                updateUI();
-                checkWin();
-            }, (maxDist * 150) + 1000);
-
-            cancelTargetingMode();
-        }
-
-        // Button Listeners
-        btnAreaScan.addEventListener('click', () => {
-            if (btnAreaScan.disabled || gameOver) return;
-
-            if (isTargetingAreaScan) {
-                cancelTargetingMode();
-            } else {
-                cancelTargetingMode();
-                isTargetingAreaScan = true;
-                boardEl.classList.add('targeting-mode');
-                btnAreaScan.classList.add('targeting-blink');
-                txtAreaScan.textContent = "Target...";
-
-                if (tutorialStep === 5) {
-                    tutorialStep = 6;
-                    showTutorial("Now hover over the board to aim, and Left-click to scan a 3x3 area!");
-                }
-            }
-        });
-
-        btnCrossScan.addEventListener('click', () => {
-            if (btnCrossScan.disabled || gameOver) return;
-
-            if (isTargetingCrossScan) {
-                cancelTargetingMode();
-            } else {
-                cancelTargetingMode();
-                isTargetingCrossScan = true;
-                boardEl.classList.add('targeting-mode');
-                btnCrossScan.classList.add('targeting-blink');
-                txtCrossScan.textContent = "Target...";
-            }
-        });
-
-        btnNukeScan.addEventListener('click', () => {
-            if (btnNukeScan.disabled || gameOver) return;
-
-            if (isTargetingNukeScan) {
-                cancelTargetingMode();
-            } else {
-                cancelTargetingMode();
-                isTargetingNukeScan = true;
-                boardEl.classList.add('targeting-mode');
-                btnNukeScan.classList.add('targeting-blink');
-                txtNukeScan.textContent = "Target...";
-            }
-        });
-
-        boardEl.addEventListener('mouseleave', clearTargetHighlights);
-
-        btnHalfScan.addEventListener('click', () => {
-            if (btnHalfScan.disabled || gameOver) return;
-
-            if (firstClick) {
-                startTimer();
-                placeMines(-1, -1); 
-                firstClick = false;
-            }
-
-            const unflaggedMines = [];
-            board.forEach(row => row.forEach(cell => {
-                if (cell.isMine && !cell.isFlagged && !cell.isRevealed) {
-                    unflaggedMines.push(cell);
-                }
-            }));
-
-            if (unflaggedMines.length === 0) return;
-
-            const countToFlag = Math.ceil(unflaggedMines.length / 2);
-            unflaggedMines.sort(() => 0.5 - Math.random());
-            const targets = unflaggedMines.slice(0, countToFlag);
-
-            lastHalfScan = Date.now();
-            btnHalfScan.disabled = true;
-
-            targets.forEach(cell => cell.element.classList.add('scan-anim'));
-
-            const boardId = currentBoardId;
-            setTimeout(() => {
-                if (boardId !== currentBoardId || gameOver) return;
-
-                targets.forEach(cell => {
-                    cell.element.classList.remove('scan-anim');
+        // Helper: Reveals a single cell logic (safe reveal / mine flag)
+        function revealPowerupCell(cell) {
+            if (cell.isRevealed) return;
+            if (cell.isMine) {
+                if (!cell.isFlagged) {
                     cell.isFlagged = true;
                     setCellContent(cell, "⚑", true);
                     cell.element.style.color = "#ff0000";
                     flagsPlaced++;
-                });
-                updateUI();
-                checkWin();
-            }, 1000);
-
-            if (tutorialStep === 7) {
-                tutorialStep = 8;
-                showTutorial("Great! Tools have cooldowns. Now Left-click a cell to start playing normally!", null, 6000);
+                }
+            } else {
+                if (cell.isFlagged) {
+                    cell.isFlagged = false;
+                    flagsPlaced--;
+                    cell.element.innerHTML = "";
+                }
+                revealCell(cell.r, cell.c);
             }
+            updateUI();
+            checkWin();
+        }
+
+        function executeAreaScan(centerR, centerC) {
+            if (firstClick) { startTimer(); placeMines(centerR, centerC); firstClick = false; }
+            lastAreaScan = Date.now(); btnAreaScan.disabled = true; btnAreaScan.classList.remove('targeting-blink');
+            for(let dr=-1; dr<=1; dr++) for(let dc=-1; dc<=1; dc++) {
+                const nr = centerR + dr, nc = centerC + dc;
+                if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
+                    let cell = board[nr][nc];
+                    cell.element.classList.add('scan-anim');
+                    revealPowerupCell(cell);
+                    setTimeout(() => cell.element.classList.remove('scan-anim'), 1000);
+                }
+            }
+            cancelTargetingMode();
+        }
+
+        function executeCrossScan(centerR, centerC) {
+            if (firstClick) { startTimer(); placeMines(centerR, centerC); firstClick = false; }
+            lastCrossScan = Date.now(); btnCrossScan.disabled = true; btnCrossScan.classList.remove('targeting-blink');
+            const boardId = currentBoardId;
+            for(let r=0; r<gridSize; r++) for(let c=0; c<gridSize; c++) {
+                if (r === centerR || c === centerC || r === 0 || r === gridSize - 1 || c === 0 || c === gridSize - 1) {
+                    let cell = board[r][c];
+                    const dist = Math.abs(cell.r - centerR) + Math.abs(cell.c - centerC);
+                    setTimeout(() => {
+                        if (boardId === currentBoardId && !gameOver) {
+                            cell.element.classList.add('cross-scan-anim');
+                            revealPowerupCell(cell);
+                            setTimeout(() => cell.element.classList.remove('cross-scan-anim'), 1000);
+                        }
+                    }, dist * 40);
+                }
+            }
+            cancelTargetingMode();
+        }
+
+        function executeNukeScan(centerR, centerC) {
+            if (firstClick) { startTimer(); placeMines(centerR, centerC); firstClick = false; }
+            lastNukeScan = Date.now(); btnNukeScan.disabled = true; btnNukeScan.classList.remove('targeting-blink');
+            const boardId = currentBoardId;
+            document.body.classList.add('screen-shake'); setTimeout(() => document.body.classList.remove('screen-shake'), 600);
+            for(let dr=-4; dr<=5; dr++) for(let dc=-4; dc<=5; dc++) {
+                const nr = centerR + dr, nc = centerC + dc;
+                if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
+                    let cell = board[nr][nc];
+                    const dist = Math.max(Math.abs(cell.r - centerR), Math.abs(cell.c - centerC));
+                    setTimeout(() => {
+                        if (boardId === currentBoardId && !gameOver) {
+                            cell.element.classList.add('nuke-scan-anim');
+                            revealPowerupCell(cell);
+                            setTimeout(() => cell.element.classList.remove('nuke-scan-anim'), 1000);
+                        }
+                    }, dist * 150);
+                }
+            }
+            cancelTargetingMode();
+        }
+
+        function executePathfinder(startR, startC) {
+            if (firstClick) { startTimer(); placeMines(startR, startC); firstClick = false; }
+            lastPathfinder = Date.now(); btnPathfinder.disabled = true; cancelTargetingMode();
+            if (board[startR][startC].isMine) {
+                revealPowerupCell(board[startR][startC]);
+                return;
+            }
+            let queue = [[startR, startC]];
+            let visited = new Set([`${startR},${startC}`]);
+            let parent = {};
+            let finalPath = [];
+            while(queue.length > 0) {
+                let [r, c] = queue.shift();
+                if (r === 0 || r === gridSize-1 || c === 0 || c === gridSize-1) {
+                    let curr = `${r},${c}`;
+                    while(curr) {
+                        let [cr, cc] = curr.split(',').map(Number);
+                        finalPath.push(board[cr][cc]);
+                        curr = parent[curr];
+                    }
+                    finalPath.reverse();
+                    break;
+                }
+                const dirs = [[-1,0], [1,0], [0,-1], [0,1]].sort(() => Math.random() - 0.5);
+                for (let [dr, dc] of dirs) {
+                    let nr = r + dr, nc = c + dc;
+                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize && !board[nr][nc].isMine && !visited.has(`${nr},${nc}`)) {
+                        visited.add(`${nr},${nc}`); parent[`${nr},${nc}`] = `${r},${c}`; queue.push([nr, nc]);
+                    }
+                }
+            }
+            if (finalPath.length === 0) {
+                let cr = startR; while(cr >= 0) { finalPath.push(board[cr][startC]); cr--; }
+            }
+            finalPath.forEach((cell, index) => {
+                setTimeout(() => {
+                    if (gameOver) return;
+                    cell.element.classList.add('path-anim');
+                    revealPowerupCell(cell);
+                    setTimeout(() => cell.element.classList.remove('path-anim'), 500);
+                }, index * 150);
+            });
+        }
+
+        function executeXStrike(centerR, centerC) {
+            if (firstClick) { startTimer(); placeMines(centerR, centerC); firstClick = false; }
+            lastXStrike = Date.now(); btnXStrike.disabled = true; cancelTargetingMode();
+            const boardId = currentBoardId;
+            for(let r=0; r<gridSize; r++) {
+                for(let c=0; c<gridSize; c++) {
+                    if (Math.abs(r - centerR) === Math.abs(c - centerC)) {
+                        let cell = board[r][c];
+                        const dist = Math.abs(cell.r - centerR);
+                        setTimeout(() => {
+                            if (boardId === currentBoardId && !gameOver) {
+                                cell.element.classList.add('xstrike-anim');
+                                revealPowerupCell(cell);
+                                setTimeout(() => cell.element.classList.remove('xstrike-anim'), 1000);
+                            }
+                        }, dist * 80);
+                    }
+                }
+            }
+        }
+
+        function executeVortex(centerR, centerC) {
+            if (firstClick) { startTimer(); placeMines(centerR, centerC); firstClick = false; }
+            lastVortex = Date.now(); btnVortex.disabled = true; cancelTargetingMode();
+            const targetCells = [], boardId = currentBoardId;
+            
+            let r = centerR, c = centerC;
+            let stepSize = 1;
+            const directions = [[0, 1], [-1, 0], [0, -1], [1, 0]]; 
+            let dirIdx = 0;
+            const visitedCoords = new Set();
+            const addTarget = (tr, tc) => {
+                if (tr >= 0 && tr < gridSize && tc >= 0 && tc < gridSize) {
+                    const key = `${tr},${tc}`;
+                    if (!visitedCoords.has(key)) {
+                        targetCells.push(board[tr][tc]);
+                        visitedCoords.add(key);
+                    }
+                }
+            };
+            addTarget(r, c);
+            while (stepSize < gridSize * 2) {
+                for (let i = 0; i < 2; i++) {
+                    const [dr, dc] = directions[dirIdx];
+                    for (let j = 0; j < stepSize; j++) {
+                        r += dr; c += dc;
+                        if (Math.ceil(stepSize / 2) % 2 !== 0) {
+                            addTarget(r, c);
+                        }
+                    }
+                    dirIdx = (dirIdx + 1) % 4;
+                }
+                stepSize++;
+            }
+
+            document.body.classList.add('screen-shake'); 
+            setTimeout(() => document.body.classList.remove('screen-shake'), 600);
+            
+            targetCells.forEach((cell, index) => {
+                const delay = index * 20; 
+                setTimeout(() => {
+                    if (boardId === currentBoardId && !gameOver) {
+                        cell.element.classList.add('vortex-anim');
+                        revealPowerupCell(cell);
+                        setTimeout(() => cell.element.classList.remove('vortex-anim'), 1000);
+                    }
+                }, delay);
+            });
+        }
+
+        // --- Instant Power-Ups ---
+        btnForge.addEventListener('click', () => {
+            if (btnForge.disabled || gameOver || firstClick) return;
+            lastForge = Date.now(); btnForge.disabled = true;
+            currentShields++; updateUI();
+            shieldIndicator.style.transform = 'scale(1.5) rotate(5deg)';
+            shieldIndicator.style.backgroundColor = 'rgba(0, 255, 0, 0.4)';
+            setTimeout(() => { shieldIndicator.style.transform = 'scale(1)'; shieldIndicator.style.backgroundColor = 'rgba(0,0,0,0.3)'; }, 300);
+        });
+
+        btnXray.addEventListener('click', () => {
+            if (btnXray.disabled || gameOver || firstClick) return;
+            lastXray = Date.now(); btnXray.disabled = true;
+            document.body.classList.add('screen-shake'); setTimeout(() => document.body.classList.remove('screen-shake'), 400);
+            board.forEach(row => row.forEach(cell => {
+                if (cell.isMine && !cell.isRevealed) {
+                    cell.element.classList.add('xray-anim');
+                    if (!cell.isFlagged) cell.element.innerHTML = '💣';
+                }
+            }));
+            setTimeout(() => {
+                if (gameOver) return;
+                board.forEach(row => row.forEach(cell => {
+                    if (cell.isMine && !cell.isRevealed) {
+                        cell.element.classList.remove('xray-anim');
+                        if (!cell.isFlagged) cell.element.innerHTML = ''; else setCellContent(cell, "⚑", true);
+                    }
+                }));
+            }, 3000);
+        });
+
+        btnMeteor.addEventListener('click', () => {
+            if (btnMeteor.disabled || gameOver || firstClick) return;
+            lastMeteor = Date.now(); btnMeteor.disabled = true;
+            let targets = [];
+            board.forEach(row => row.forEach(cell => { if (!cell.isRevealed) targets.push(cell); }));
+            targets.sort(() => Math.random() - 0.5);
+            let drops = targets.slice(0, Math.min(Math.floor(level/2) + 4, targets.length)); 
+            drops.forEach((dropCell, index) => {
+                setTimeout(() => {
+                    if(gameOver) return;
+                    document.body.classList.add('screen-shake'); setTimeout(() => document.body.classList.remove('screen-shake'), 200);
+                    for(let dr=-1; dr<=1; dr++) for(let dc=-1; dc<=1; dc++) {
+                        const nr = dropCell.r + dr, nc = dropCell.c + dc;
+                        if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
+                            let cell = board[nr][nc];
+                            cell.element.classList.add('meteor-anim');
+                            revealPowerupCell(cell);
+                            setTimeout(() => cell.element.classList.remove('meteor-anim'), 500); 
+                        }
+                    }
+                }, index * 600);
+            });
+        });
+
+        btnHalfScan.addEventListener('click', () => {
+            if (btnHalfScan.disabled || gameOver) return;
+            if (firstClick) { startTimer(); placeMines(-1, -1); firstClick = false; }
+            const unflaggedMines = [];
+            board.forEach(row => row.forEach(cell => { if (cell.isMine && !cell.isFlagged && !cell.isRevealed) unflaggedMines.push(cell); }));
+            if (unflaggedMines.length === 0) return;
+            unflaggedMines.sort(() => 0.5 - Math.random());
+            const targets = unflaggedMines.slice(0, Math.ceil(unflaggedMines.length / 2));
+            lastHalfScan = Date.now(); btnHalfScan.disabled = true;
+            targets.forEach((cell, idx) => {
+                setTimeout(() => {
+                    if (gameOver) return;
+                    cell.element.classList.add('scan-anim');
+                    revealPowerupCell(cell);
+                    setTimeout(() => cell.element.classList.remove('scan-anim'), 1000);
+                }, idx * 100);
+            });
         });
 
         btnSafeScan.addEventListener('click', () => {
             if (btnSafeScan.disabled || gameOver) return;
-
-            if (firstClick) {
-                startTimer();
-                placeMines(-1, -1);
-                firstClick = false;
-            }
-
+            if (firstClick) { startTimer(); placeMines(-1, -1); firstClick = false; }
             const safeUnrevealed = [];
-            board.forEach(row => row.forEach(cell => {
-                if (!cell.isMine && !cell.isRevealed && !cell.isFlagged) {
-                    safeUnrevealed.push(cell);
-                }
-            }));
-
+            board.forEach(row => row.forEach(cell => { if (!cell.isMine && !cell.isRevealed && !cell.isFlagged) safeUnrevealed.push(cell); }));
             if (safeUnrevealed.length === 0) return;
-
-            const countToReveal = Math.ceil(safeUnrevealed.length / 2);
             safeUnrevealed.sort(() => 0.5 - Math.random());
-            const targets = safeUnrevealed.slice(0, countToReveal);
-
-            lastSafeScan = Date.now();
-            btnSafeScan.disabled = true;
-
-            targets.forEach(cell => cell.element.classList.add('scan-anim'));
-
-            const boardId = currentBoardId;
-            setTimeout(() => {
-                if (boardId !== currentBoardId || gameOver) return;
-
-                targets.forEach(cell => {
-                    cell.element.classList.remove('scan-anim');
-                    if (!cell.isRevealed && !cell.isFlagged) {
-                        revealCell(cell.r, cell.c);
-                    }
-                });
-                updateUI();
-                checkWin();
-            }, 1000);
+            const targets = safeUnrevealed.slice(0, Math.ceil(safeUnrevealed.length / 2));
+            lastSafeScan = Date.now(); btnSafeScan.disabled = true;
+            targets.forEach((cell, idx) => {
+                setTimeout(() => {
+                    if (gameOver) return;
+                    cell.element.classList.add('scan-anim');
+                    revealPowerupCell(cell);
+                    setTimeout(() => cell.element.classList.remove('scan-anim'), 1000);
+                }, idx * 100);
+            });
         });
 
-        // --- Initialisierung ---
+        // --- Initialisierung & Spiellogik ---
         function initLevel() {
-            gridSize = level + 2; 
-            currentBoardId++; 
-            cancelTargetingMode();
-            
-            // Map Position & Zoom zurücksetzen!
-            mapScale = 1; mapX = 0; mapY = 0; tempMapX = 0; tempMapY = 0;
-            updateMapTransform();
-            
-            if (level === 1) {
-                totalMines = 1; 
-                tutorialStep = 1;
-            } else if (level === 2) {
-                totalMines = Math.max(1, Math.ceil(gridSize * gridSize * 0.15));
-                tutorialStep = 5;
-            } else {
-                totalMines = Math.max(1, Math.ceil(gridSize * gridSize * 0.15));
-                tutorialStep = 0; 
-            }
-            
-            maxShields = Math.floor(level / 5);
-            currentShields = maxShields;
-
-            flagsPlaced = 0;
-            defusedCount = 0;
-            firstClick = true;
-            gameOver = false;
-            isAnimating = false;
-            board = [];
-            hideTutorial();
-            
-            animationTimeouts.forEach(clearTimeout);
-            animationTimeouts = [];
-            
-            stopTimer();
-            timerEl.textContent = "000";
-            updateUI();
-            smileyBtn.textContent = "🙂";
-            winDialog.style.display = 'none';
-
-            // CSS Grid an das 64px Zell-Design anpassen
-            boardEl.style.gridTemplateColumns = `repeat(${gridSize}, 64px)`;
-            boardEl.style.gridTemplateRows = `repeat(${gridSize}, 64px)`;
-            boardEl.innerHTML = '';
-
+            gridSize = level + 2; currentBoardId++; cancelTargetingMode();
+            mapScale = 1; mapX = 0; mapY = 0; tempMapX = 0; tempMapY = 0; updateMapTransform();
+            if (level === 1) { totalMines = 1; tutorialStep = 1; } 
+            else if (level === 2) { totalMines = Math.max(1, Math.ceil(gridSize * gridSize * 0.15)); tutorialStep = 5; } 
+            else { totalMines = Math.max(1, Math.ceil(gridSize * gridSize * 0.15)); tutorialStep = 0; }
+            maxShields = Math.floor(level / 5); currentShields = maxShields;
+            flagsPlaced = 0; defusedCount = 0; firstClick = true; gameOver = false; isAnimating = false; board = [];
+            hideTutorial(); animationTimeouts.forEach(clearTimeout); animationTimeouts = [];
+            stopTimer(); timerEl.textContent = "000"; updateUI(); smileyBtn.textContent = "🙂"; winDialog.style.display = 'none';
+            boardEl.style.gridTemplateColumns = `repeat(${gridSize}, 64px)`; boardEl.style.gridTemplateRows = `repeat(${gridSize}, 64px)`; boardEl.innerHTML = '';
             for (let r = 0; r < gridSize; r++) {
                 const row = [];
                 for (let c = 0; c < gridSize; c++) {
-                    const cell = {
-                        r, c,
-                        isMine: false,
-                        isRevealed: false,
-                        isFlagged: false,
-                        neighborMines: 0,
-                        element: document.createElement('div')
-                    };
-                    
+                    const cell = { r, c, isMine: false, isRevealed: false, isFlagged: false, neighborMines: 0, element: document.createElement('div') };
                     cell.element.classList.add('cell');
-                    
-                    cell.element.addEventListener('mouseenter', () => {
-                        updateTargetHighlights(r, c);
-                    });
-
+                    cell.element.addEventListener('mouseenter', () => updateTargetHighlights(r, c));
                     cell.element.addEventListener('mousedown', (e) => {
-                        if (e.button === 0 && !gameOver && !isAnimating && !cell.isRevealed && !isTargetingAreaScan && !isTargetingCrossScan && !isTargetingNukeScan) smileyBtn.textContent = "😮";
+                        if (e.button === 0 && !gameOver && !isAnimating && !cell.isRevealed && !isTargetingAreaScan && !isTargetingCrossScan && !isTargetingNukeScan && !isTargetingPathfinder && !isTargetingXStrike && !isTargetingVortex) smileyBtn.textContent = "😮";
                     });
-                    
-                    cell.element.addEventListener('mouseup', (e) => {
-                        if (!gameOver && !isAnimating) smileyBtn.textContent = "🙂";
-                    });
-
-                    cell.element.addEventListener('click', () => {
-                        if (isDraggingMap || isAnimating) return; 
-                        handleLeftClick(r, c);
-                    });
-                    
-                    cell.element.addEventListener('contextmenu', (e) => {
-                        e.preventDefault();
-                        if (isDraggingMap || isAnimating) return; 
-                        handleRightClick(e, r, c);
-                    });
-                    
-                    boardEl.appendChild(cell.element);
-                    row.push(cell);
+                    cell.element.addEventListener('mouseup', () => { if (!gameOver && !isAnimating) smileyBtn.textContent = "🙂"; });
+                    cell.element.addEventListener('click', () => { if (isDraggingMap || isAnimating) return; handleLeftClick(r, c); });
+                    cell.element.addEventListener('contextmenu', (e) => { e.preventDefault(); if (isDraggingMap || isAnimating) return; handleRightClick(e, r, c); });
+                    boardEl.appendChild(cell.element); row.push(cell);
                 }
                 board.push(row);
             }
-
-            if (tutorialStep === 1) {
-                showTutorial("Welcome to Growsweeper! Left-click the glowing cell to start.", board[1][1]);
-            } else if (tutorialStep === 5) {
-                lastAreaScan = 0;
-                lastCrossScan = 0;
-                lastNukeScan = 0;
-                lastHalfScan = 0;
-                lastSafeScan = 0;
-                showTutorial("Level 2! Use the Powerups from the right menu now. Click the 🔍 button!", btnAreaScan);
-            }
+            if (tutorialStep === 1) showTutorial("Welcome to Growsweeper! Left-click the glowing cell to start.", board[1][1]);
         }
 
         function placeMines(firstRow, firstCol) {
-            if (level === 1) {
-                board[0][0].isMine = true;
-            } else {
+            if (level === 1) { board[0][0].isMine = true; } 
+            else {
                 let minesPlaced = 0;
                 while (minesPlaced < totalMines) {
-                    const r = Math.floor(Math.random() * gridSize);
-                    const c = Math.floor(Math.random() * gridSize);
-                    if (!board[r][c].isMine && (r !== firstRow || c !== firstCol)) {
-                        board[r][c].isMine = true;
-                        minesPlaced++;
-                    }
+                    const r = Math.floor(Math.random() * gridSize), c = Math.floor(Math.random() * gridSize);
+                    if (!board[r][c].isMine && (r !== firstRow || c !== firstCol)) { board[r][c].isMine = true; minesPlaced++; }
                 }
             }
-
-            for (let r = 0; r < gridSize; r++) {
-                for (let c = 0; c < gridSize; c++) {
-                    if (!board[r][c].isMine) {
-                        let count = 0;
-                        DIRECTIONS.forEach(([dr, dc]) => {
-                            const nr = r + dr, nc = c + dc;
-                            if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize && board[nr][nc].isMine) {
-                                count++;
-                            }
-                        });
-                        board[r][c].neighborMines = count;
-                    }
+            for (let r = 0; r < gridSize; r++) for (let c = 0; c < gridSize; c++) {
+                if (!board[r][c].isMine) {
+                    let count = 0;
+                    DIRECTIONS.forEach(([dr, dc]) => {
+                        const nr = r + dr, nc = c + dc;
+                        if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize && board[nr][nc].isMine) count++;
+                    });
+                    board[r][c].neighborMines = count;
                 }
             }
         }
 
-        function setCellContent(cell, contentHtml, isFlag = false) {
-            cell.element.innerHTML = `<span class="${isFlag ? 'flag' : 'content'}">${contentHtml}</span>`;
-        }
+        function setCellContent(cell, contentHtml, isFlag = false) { cell.element.innerHTML = `<span class="${isFlag ? 'flag' : 'content'}">${contentHtml}</span>`; }
 
         function handleLeftClick(r, c) {
             if (gameOver) return;
-
-            if (isTargetingAreaScan) {
-                executeAreaScan(r, c);
-                if (tutorialStep === 6) {
-                    tutorialStep = 7;
-                    showTutorial("Awesome! Now click the 📡 Half-Bomb Scan button!", btnHalfScan);
-                }
-                return;
-            } else if (isTargetingCrossScan) {
-                executeCrossScan(r, c);
-                return;
-            } else if (isTargetingNukeScan) {
-                executeNukeScan(r, c);
-                return;
-            }
-
+            if (isTargetingAreaScan) return executeAreaScan(r, c);
+            if (isTargetingCrossScan) return executeCrossScan(r, c);
+            if (isTargetingNukeScan) return executeNukeScan(r, c);
+            if (isTargetingPathfinder) return executePathfinder(r, c);
+            if (isTargetingXStrike) return executeXStrike(r, c);
+            if (isTargetingVortex) return executeVortex(r, c);
             if (tutorialStep === 1 && (r !== 1 || c !== 1)) return;
-            if (tutorialStep === 2 && r === 0 && c === 0) return;
-            if (tutorialStep === 3 && (r !== 0 || c !== 1)) return;
-
             const cell = board[r][c];
             if (cell.isRevealed || cell.isFlagged) return;
-
-            if (firstClick) {
-                startTimer();
-                placeMines(r, c);
-                firstClick = false;
-            }
-
+            if (firstClick) { startTimer(); placeMines(r, c); firstClick = false; }
             revealCell(r, c);
-
-            if (tutorialStep === 1) {
-                tutorialStep = 2;
-                showTutorial("The '1' means exactly 1 mine is touching this cell. Right-click the glowing cell to place a Flag!", board[0][0]);
-            } else if (tutorialStep === 3) {
-                tutorialStep = 4;
-                showTutorial("Awesome! Now reveal all the other safe cells to win the level!", null, 5000);
-            }
         }
 
         function handleRightClick(e, r, c) {
             if (gameOver) return;
-            
-            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan) {
-                cancelTargetingMode();
-                return;
-            }
-
+            if (isTargetingAreaScan || isTargetingCrossScan || isTargetingNukeScan || isTargetingPathfinder || isTargetingXStrike || isTargetingVortex) { cancelTargetingMode(); return; }
             if (firstClick) return;
-            if (tutorialStep === 2 && (r !== 0 || c !== 0)) return;
-            
             const cell = board[r][c];
             if (cell.isRevealed) return;
-
             if (!cell.isFlagged) {
-                cell.isFlagged = true;
-                setCellContent(cell, "⚑", true);
-                cell.element.style.color = "#ff0000";
-                flagsPlaced++;
-                
-                if (tutorialStep === 2 && r === 0 && c === 0) {
-                    tutorialStep = 3;
-                    showTutorial("Great job! Now we know this cell is safe. Left-click the glowing cell to continue.", board[0][1]);
-                }
+                cell.isFlagged = true; setCellContent(cell, "⚑", true); cell.element.style.color = "#ff0000"; flagsPlaced++;
             } else {
-                cell.isFlagged = false;
-                cell.element.innerHTML = "";
-                flagsPlaced--;
+                cell.isFlagged = false; cell.element.innerHTML = ""; flagsPlaced--;
             }
             updateUI();
         }
 
-        // --- Totem Effect Logic ---
         function triggerTotemEffect(cell) {
-            isAnimating = true;
-            stopTimer();
-            smileyBtn.textContent = "😲";
-            
-            document.body.classList.add('screen-shake');
-            totemOverlay.classList.add('active');
-            
+            isAnimating = true; stopTimer(); smileyBtn.textContent = "😲";
+            document.body.classList.add('screen-shake'); totemOverlay.classList.add('active');
             setTimeout(() => {
-                document.body.classList.remove('screen-shake');
-                totemOverlay.classList.remove('active');
-                
-                setCellContent(cell, "🛡️");
-                cell.element.style.color = "#000000";
-                
-                updateUI();
-                smileyBtn.textContent = "🙂";
-                
-                isAnimating = false;
-                startTimer();
-                checkWin(); 
+                document.body.classList.remove('screen-shake'); totemOverlay.classList.remove('active');
+                setCellContent(cell, "🛡️"); cell.element.style.color = "#000000";
+                updateUI(); smileyBtn.textContent = "🙂"; isAnimating = false; startTimer(); checkWin(); 
             }, 1500); 
         }
 
         function revealCell(r, c) {
             const cell = board[r][c];
-            cell.isRevealed = true;
-            cell.element.classList.add('revealed');
-
+            cell.isRevealed = true; cell.element.classList.add('revealed');
             if (cell.isMine) {
-                if (currentShields > 0) {
-                    currentShields--;
-                    defusedCount++;
-                    triggerTotemEffect(cell);
-                    return; 
-                }
-                
-                triggerGameOver(false, cell);
-                return;
+                if (currentShields > 0) { currentShields--; defusedCount++; triggerTotemEffect(cell); return; }
+                triggerGameOver(false, cell); return;
             }
-
             if (cell.neighborMines > 0) {
-                setCellContent(cell, cell.neighborMines);
-                cell.element.classList.add(`num-${cell.neighborMines}`);
+                setCellContent(cell, cell.neighborMines); cell.element.classList.add(`num-${cell.neighborMines}`);
             } else {
                 DIRECTIONS.forEach(([dr, dc]) => {
                     const nr = r + dr, nc = c + dc;
-                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize) {
-                        const neighbor = board[nr][nc];
-                        if (!neighbor.isRevealed && !neighbor.isFlagged) {
-                            revealCell(nr, nc);
-                        }
-                    }
+                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize && !board[nr][nc].isRevealed && !board[nr][nc].isFlagged) revealCell(nr, nc);
                 });
             }
-
             checkWin();
         }
 
         function triggerGameOver(won, hitCell = null) {
             if (gameOver) return;
-            gameOver = true;
-            stopTimer();
-            hideTutorial();
-            cancelTargetingMode();
-
+            gameOver = true; stopTimer(); hideTutorial(); cancelTargetingMode();
             if (won) {
                 smileyBtn.textContent = "😎";
-                
-                const levelPoints = gridSize * gridSize;
-                totalScore += levelPoints;
-                levelScoreDisplayEl.textContent = levelPoints;
-                updateUI(); 
-
+                const levelPoints = gridSize * gridSize; totalScore += levelPoints; levelScoreDisplayEl.textContent = levelPoints;
                 board.forEach(row => row.forEach(cell => {
-                    if (cell.isMine && !cell.isFlagged && cell.element.textContent !== "🛡️") {
-                        setCellContent(cell, "⚑", true);
-                        cell.element.style.color = "#ff0000";
-                    }
+                    if (cell.isMine && !cell.isFlagged && cell.element.textContent !== "🛡️") { setCellContent(cell, "⚑", true); cell.element.style.color = "#ff0000"; }
                 }));
-                flagsPlaced = totalMines - defusedCount;
-                updateUI();
-                
-                document.body.classList.add('screen-shake');
-                setTimeout(() => document.body.classList.remove('screen-shake'), 500);
-
+                flagsPlaced = totalMines - defusedCount; updateUI();
+                document.body.classList.add('screen-shake'); setTimeout(() => document.body.classList.remove('screen-shake'), 500);
                 setTimeout(() => { winDialog.style.display = 'flex'; }, 800);
-
             } else {
-                totalFails++; 
-                updateUI(); 
-
-                smileyBtn.textContent = "😵";
+                totalFails++; updateUI(); smileyBtn.textContent = "😵";
                 document.body.classList.add('screen-shake'); 
-                
-                const hitR = hitCell ? hitCell.r : Math.floor(gridSize / 2);
-                const hitC = hitCell ? hitCell.c : Math.floor(gridSize / 2);
-                
-                if (hitCell) {
-                    hitCell.element.classList.add('mine-hit');
-                    setCellContent(hitCell, "💣");
-                }
-                
+                const hitR = hitCell ? hitCell.r : Math.floor(gridSize / 2), hitC = hitCell ? hitCell.c : Math.floor(gridSize / 2);
+                if (hitCell) { hitCell.element.classList.add('mine-hit'); setCellContent(hitCell, "💣"); }
                 board.forEach(row => row.forEach(cell => {
                     if (cell === hitCell) return; 
-
                     const dist = Math.sqrt(Math.pow(cell.r - hitR, 2) + Math.pow(cell.c - hitC, 2));
                     const delay = dist * 70; 
-
                     const timeout = setTimeout(() => {
                         if (!cell.isRevealed) {
                             cell.element.classList.add('revealed');
-                            
-                            if (cell.isMine && !cell.isFlagged) {
-                                setCellContent(cell, "💣");
-                            } else if (!cell.isMine && cell.isFlagged) {
-                                setCellContent(cell, "❌");
-                            } else if (!cell.isMine && !cell.isFlagged) {
-                                if (cell.neighborMines > 0) {
-                                    setCellContent(cell, cell.neighborMines);
-                                    cell.element.classList.add(`num-${cell.neighborMines}`);
-                                }
+                            if (cell.isMine && !cell.isFlagged) setCellContent(cell, "💣");
+                            else if (!cell.isMine && cell.isFlagged) setCellContent(cell, "❌");
+                            else if (!cell.isMine && !cell.isFlagged && cell.neighborMines > 0) {
+                                setCellContent(cell, cell.neighborMines); cell.element.classList.add(`num-${cell.neighborMines}`);
                             }
                         }
                     }, delay);
@@ -1890,28 +1532,15 @@
 
         function checkWin() {
             if (gameOver || isAnimating) return; 
-
             let safeRevealedCount = 0;
-            board.forEach(row => row.forEach(cell => {
-                if (cell.isRevealed && !cell.isMine) safeRevealedCount++;
-            }));
-
-            if (safeRevealedCount === (gridSize * gridSize) - totalMines) {
-                triggerGameOver(true);
-            }
+            board.forEach(row => row.forEach(cell => { if (cell.isRevealed && !cell.isMine) safeRevealedCount++; }));
+            if (safeRevealedCount === (gridSize * gridSize) - totalMines) triggerGameOver(true);
         }
 
-        smileyBtn.addEventListener('click', () => {
-            if(!isAnimating) initLevel(); 
-        });
-
-        nextLevelBtn.addEventListener('click', () => {
-            level++;
-            initLevel();
-        });
-
+        smileyBtn.addEventListener('click', () => { if(!isAnimating) initLevel(); });
+        nextLevelBtn.addEventListener('click', () => { level++; initLevel(); });
+        boardEl.addEventListener('mouseleave', clearTargetHighlights);
         initLevel();
-
     </script>
 </body>
 </html>
