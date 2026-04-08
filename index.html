@@ -150,11 +150,9 @@
             background-color: #c0c0c0;
         }
 
-        /* Targeting Mode für den Scan */
         .targeting-mode { cursor: crosshair !important; }
         .targeting-mode .cell { cursor: crosshair !important; }
 
-        /* DEUTLICH VERGRÖSSERTE ZELLEN (64px) */
         .cell {
             width: 64px;
             height: 64px;
@@ -176,17 +174,14 @@
 
         body:active:not(.targeting-mode) .cell { cursor: grabbing; }
 
-        /* Hover Animation */
         .cell:not(.revealed):hover { filter: brightness(1.15); }
 
-        /* Click Down Animation */
         .cell:active:not(.revealed):not(.flagged) {
             border: 3px solid #808080;
             background-color: #c0c0c0;
             transform: scale(0.95);
         }
 
-        /* Revealed Animations */
         .cell.revealed {
             border: 2px solid #808080;
             border-top-color: #808080;
@@ -207,7 +202,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* Flag Animation */
         .cell .flag {
             display: inline-block;
             animation: flag-plant 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -229,7 +223,6 @@
             100% { background-color: #8b0000; }
         }
 
-        /* Number Colors */
         .num-1 { color: #0000ff; }
         .num-2 { color: #008000; }
         .num-3 { color: #ff0000; }
@@ -239,7 +232,6 @@
         .num-7 { color: #000000; }
         .num-8 { color: #808080; }
 
-        /* Dialog Box */
         .dialog-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -320,7 +312,6 @@
             transition: transform 0.2s;
         }
 
-        /* Powerup Sidebar - Grid System */
         .powerups-sidebar {
             position: fixed;
             right: 15px;
@@ -415,7 +406,6 @@
             background-color: rgba(0, 255, 255, 0.2) !important;
         }
 
-        /* Powerup Animations */
         .scan-anim { animation: scan-pulse 1s forwards; z-index: 10; }
         @keyframes scan-pulse {
             0% { background-color: #00ffff; box-shadow: inset 0 0 15px #00ffff; }
@@ -453,7 +443,7 @@
             0% { transform: translateY(-800px) scale(0.5); background-color: #ff5500; opacity: 0; }
             50% { opacity: 1; }
             80% { transform: translateY(0) scale(1.2); background-color: #ffaa00; box-shadow: inset 0 0 30px #ff0000; }
-            100% { transform: scale(1); background-color: #c0c0c0; box-shadow: none; }
+            100% { transform: scale(1); background-color: #c0c0c0; box-shadow: none; transform: translateY(0); }
         }
 
         .path-anim {
@@ -465,7 +455,6 @@
             100% { background-color: #c0c0c0; transform: scale(1); }
         }
 
-        /* Animations für X-Strike, Vortex */
         .xstrike-anim {
             animation: xstrike-flash 0.8s forwards;
             z-index: 15;
@@ -521,51 +510,6 @@
             100% { opacity: 0; transform: scale(2) translateY(-100px) rotate(0deg); }
         }
 
-        /* Live Tutorial Styles */
-        .tutorial-box {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #ffffe1;
-            border: 1px solid #000000;
-            padding: 12px 18px;
-            font-size: 16px;
-            color: #000000;
-            box-shadow: 2px 2px 3px rgba(0,0,0,0.5);
-            z-index: 1000;
-            text-align: center;
-            pointer-events: auto; /* Geändert für Klick-Interaktion */
-            display: none;
-            max-width: 400px;
-            line-height: 1.4;
-            animation: pop-in 0.3s forwards;
-            cursor: pointer;
-        }
-
-        .tutorial-highlight {
-            animation: pulse-highlight 1.5s infinite alternate;
-            z-index: 1001;
-            position: relative;
-        }
-
-        @keyframes pulse-highlight {
-            0% { box-shadow: 0 0 0px 4px rgba(255, 255, 0, 0.8); transform: scale(1); }
-            100% { box-shadow: 0 0 15px 6px rgba(255, 136, 0, 0.8); transform: scale(1.1); }
-        }
-
-        .scribble-text {
-            font-family: 'Kalam', cursive;
-            color: #ff3333;
-            font-size: 22px;
-            position: absolute;
-            pointer-events: none;
-            z-index: 200;
-            white-space: nowrap;
-            text-shadow: 1px 1px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff;
-            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
-        }
-
         .footer {
             position: fixed;
             bottom: 10px;
@@ -607,9 +551,9 @@
                 <div class="title-right" style="display: flex; gap: 15px; align-items: center;">
                     <span>Score: <span id="title-score">0</span></span>
                     <span>Fails: <span id="title-fails" style="color: #ff5555;">0</span></span>
-                    <button id="help-btn" class="dialog-btn" style="padding: 2px 10px; font-size: 14px; min-width: 30px;">?</button>
+                    <button id="help-btn" class="dialog-btn" title="how to play" style="padding: 2px 10px; font-size: 14px; min-width: 30px;">?</button>
                     <div style="position: relative;">
-                        <button id="save-load-btn" class="dialog-btn" style="padding: 2px 10px; font-size: 14px;">Save / Load</button>
+                        <button id="save-load-btn" class="dialog-btn" title="load your progress" style="padding: 2px 10px; font-size: 14px;">Save / Load</button>
                     </div>
                 </div>
             </div>
@@ -620,7 +564,7 @@
                     <div class="digital-display" id="mine-counter">000</div>
                 </div>
                 <div style="display: flex; flex-direction: column; align-items: center; position: relative;">
-                    <div class="smiley-btn" id="smiley-btn">🙂</div>
+                    <div class="smiley-btn" id="smiley-btn" title="click to reset">🙂</div>
                 </div>
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
                     <span style="font-size: 13px; color: #ffffff; text-shadow: 1px 1px #000; font-weight: bold;">Timer:</span>
@@ -672,30 +616,25 @@
         </button>
     </div>
 
-    <!-- Live Tutorial Floating Box -->
-    <div id="tutorial-box" class="tutorial-box"></div>
-
     <!-- Help Dialog -->
     <div class="dialog-overlay" id="help-dialog">
         <div class="dialog-box" style="min-width: 450px; max-width: 600px;">
             <div class="dialog-header">
-                <span>Help & Mechanics</span>
+                <span>How to Play & Mechanics</span>
                 <button id="close-help-btn" style="background: none; border: none; color: white; cursor: pointer; font-weight: bold; font-family: inherit; font-size: 16px;">X</button>
             </div>
             <div class="dialog-content" style="padding: 15px; text-align: left; font-size: 14px;">
+                <p><b>Rules of the Game:</b><br>
+                1. Click cells to reveal them. If you hit a 💣, you lose (unless you have a shield).<br>
+                2. Numbers show how many bombs are in the 8 surrounding cells.<br>
+                3. Right-click to place a flag ⚑ on suspected bombs.<br>
+                4. Clear all safe cells to win and progress to the next level!</p>
+                <hr style="border: 1px solid #808080; margin: 10px 0;">
                 <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
-                    <li style="margin-bottom: 6px;"><b>Map Dragging & Zooming:</b> Click and drag the background to move. Use your mouse wheel or pinch to zoom!</li>
-                    <li style="margin-bottom: 6px;"><b>Save / Load:</b> Generates a code (Level, Score, Fails, Cooldowns). Copy to save, paste to resume!</li>
-                    <li style="margin-bottom: 6px;"><b>Shields 🛡️:</b> Every 5 levels, you gain an automatic Shield to survive a mine hit!</li>
-                    <li><b>11 Epic Power-Ups (Right Sidebar):</b> 
-                        <ul style="margin-top: 4px; padding-left: 15px; list-style-type: square;">
-                            <li>🔍 3x3 Scan | ☢️ 10x10 Nuke | 🎯 Cross Scan | 🧭 Pathfinder (Safe Route)</li>
-                            <li>📡 1/2 Mines | 🌟 1/2 Safe | 👁️ X-Ray | ☄️ Meteor Strikes</li>
-                            <li>⚔️ <b>X-Strike:</b> Diagonal laser strike!</li>
-                            <li>🌀 <b>Vortex:</b> A spiral vortex with one row gaps!</li>
-                            <li>⚒️ <b>Forge:</b> Instantly grants +1 Shield!</li>
-                        </ul>
-                    </li>
+                    <li style="margin-bottom: 6px;"><b>Movement:</b> Drag background to move. Mouse wheel or pinch to zoom.</li>
+                    <li style="margin-bottom: 6px;"><b>Save / Load:</b> Copy the code to save your level, score, and cooldowns!</li>
+                    <li style="margin-bottom: 6px;"><b>Shields 🛡️:</b> You get one every 5 levels. They automatically save you from one bomb!</li>
+                    <li><b>Power-Ups:</b> Use the sidebar on the right to scan areas, strike rows, or find safe paths when stuck.</li>
                 </ul>
             </div>
         </div>
@@ -785,29 +724,6 @@
         let isTargetingNukeScan = false, isTargetingPathfinder = false;
         let isTargetingXStrike = false, isTargetingVortex = false;
 
-        // Tutorial Status
-        let tutorialIndex = 0;
-        let tutorialTimeout = null;
-
-        const tutorialSteps = [
-            { text: "Welcome to Growsweeper! Left-click a cell to start. Numbers show how many bombs are nearby.", target: () => board[1][1] },
-            { text: "Right-click to plant a flag ⚑ on suspected bombs. This helps you track the 'Bomb' counter above.", target: () => board[1][1] },
-            { text: "Check the sidebar! You have 11 powerful tools. Let's look at them. (Click here to continue)", target: null },
-            { text: "🔍 3x3 Scan: Reveals a small area safely, even triggering numbers.", target: () => document.getElementById('btn-area-scan') },
-            { text: "☢️ Nuke Scan: A massive 10x10 blast that clears a huge chunk of the map!", target: () => document.getElementById('btn-nuke-scan') },
-            { text: "🎯 Cross Scan: Clears a cross pattern from your target to the map edges.", target: () => document.getElementById('btn-cross-scan') },
-            { text: "🧭 Pathfinder: Calculates a safe route from your target to the nearest edge.", target: () => document.getElementById('btn-pathfinder') },
-            { text: "📡 1/2 Mines: Automatically flags half of the remaining hidden bombs!", target: () => document.getElementById('btn-half-scan') },
-            { text: "🌟 1/2 Safe: Automatically reveals half of the remaining safe cells!", target: () => document.getElementById('btn-safe-scan') },
-            { text: "👁️ X-Ray: Lets you peak at all bomb locations for 3 seconds.", target: () => document.getElementById('btn-xray') },
-            { text: "☄️ Meteor: Triggers random meteor strikes that clear areas automatically.", target: () => document.getElementById('btn-meteor') },
-            { text: "⚔️ X-Strike: Diagonal laser strike clearing paths from your target.", target: () => document.getElementById('btn-xstrike') },
-            { text: "🌀 Vortex: A spiral reveal that leaves tactical gaps for you to solve.", target: () => document.getElementById('btn-vortex') },
-            { text: "⚒️ Forge: Grants you an immediate +1 Shield 🛡️ to survive a hit.", target: () => document.getElementById('btn-forge') },
-            { text: "🛡️ Shields: You get them every 5 levels. They protect you from a single bomb hit!", target: () => document.getElementById('shield-indicator') },
-            { text: "Final tip: You can drag the map to move and scroll to zoom. Solve the board to level up! (Click to finish)", target: null }
-        ];
-
         // Drag & Drop Map
         let isDraggingMap = false, dragStartX = 0, dragStartY = 0;
         let mapX = 0, mapY = 0, tempMapX = 0, tempMapY = 0;
@@ -822,7 +738,6 @@
         const shieldIndicator = document.getElementById('shield-indicator');
         const winDialog = document.getElementById('win-dialog');
         const nextLevelBtn = document.getElementById('next-level-btn');
-        const tutorialBox = document.getElementById('tutorial-box');
         const titleLevelEl = document.getElementById('title-level');
         const titleScoreEl = document.getElementById('title-score');
         const titleFailsEl = document.getElementById('title-fails');
@@ -914,7 +829,6 @@
                 lastXStrike = data.xs || 0; lastVortex = data.vx || 0; lastForge = data.fg || 0;
                 saveLoadDialog.style.display = 'none';
                 initLevel();
-                showTutorialMessage("Game successfully loaded!", null, 3000);
             } else {
                 slMessage.textContent = "Error: Invalid Save Code! Must be exactly 1000 characters.";
                 slMessage.style.color = "red";
@@ -977,7 +891,7 @@
 
         function updateUI() {
             mineCounterEl.textContent = formatNumber(totalMines - flagsPlaced - defusedCount);
-            titleLevelEl.textContent = `Level ${level}`;
+            titleLevelEl.textContent = `Level ${level} (${gridSize}x${gridSize})`;
             titleScoreEl.textContent = totalScore;
             titleFailsEl.textContent = totalFails; 
             if (maxShields > 0 || currentShields > 0) {
@@ -1041,34 +955,6 @@
             updateCooldownUI(btnForge, txtForge, lastForge, FORGE_CD, false, "Forge", forgeWasOnCooldown, v => forgeWasOnCooldown = v);
         }, 500);
 
-        function showTutorialMessage(text, highlightTarget = null, autoHideMs = 0) {
-            tutorialBox.innerHTML = `<div>${text}</div><div style="font-size: 10px; margin-top: 5px; color: #666;">(Click to continue)</div>`;
-            tutorialBox.style.display = 'block';
-            document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
-            if (highlightTarget) { (highlightTarget.element || highlightTarget).classList.add('tutorial-highlight'); }
-            if (tutorialTimeout) clearTimeout(tutorialTimeout);
-            if (autoHideMs > 0) tutorialTimeout = setTimeout(hideTutorial, autoHideMs);
-        }
-
-        function advanceTutorial() {
-            tutorialIndex++;
-            if (tutorialIndex < tutorialSteps.length) {
-                const step = tutorialSteps[tutorialIndex];
-                const target = typeof step.target === 'function' ? step.target() : step.target;
-                showTutorialMessage(step.text, target);
-            } else {
-                hideTutorial();
-                tutorialIndex = 0;
-            }
-        }
-
-        tutorialBox.addEventListener('click', advanceTutorial);
-
-        function hideTutorial() {
-            tutorialBox.style.display = 'none';
-            document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
-        }
-
         helpBtn.addEventListener('click', () => helpDialog.style.display = 'flex');
         closeHelpBtn.addEventListener('click', () => helpDialog.style.display = 'none');
 
@@ -1127,7 +1013,6 @@
         btnXStrike.addEventListener('click', () => isTargetingXStrike ? cancelTargetingMode() : activateTargetMode(btnXStrike, txtAreaScan, () => isTargetingXStrike=true));
         btnVortex.addEventListener('click', () => isTargetingVortex ? cancelTargetingMode() : activateTargetMode(btnVortex, txtAreaScan, () => isTargetingVortex=true));
 
-        // Helper: Reveals a single cell logic (safe reveal / mine flag)
         function revealPowerupCell(cell) {
             if (cell.isRevealed) return;
             if (cell.isMine) {
@@ -1209,44 +1094,43 @@
         function executePathfinder(startR, startC) {
             if (firstClick) { startTimer(); placeMines(startR, startC); firstClick = false; }
             lastPathfinder = Date.now(); btnPathfinder.disabled = true; cancelTargetingMode();
-            if (board[startR][startC].isMine) {
-                revealPowerupCell(board[startR][startC]);
-                return;
-            }
-            let queue = [[startR, startC]];
+            
+            // Overhauled BFS to find a guaranteed safe trail to an edge
+            let queue = [{ r: startR, c: startC, path: [board[startR][startC]] }];
             let visited = new Set([`${startR},${startC}`]);
-            let parent = {};
-            let finalPath = [];
-            while(queue.length > 0) {
-                let [r, c] = queue.shift();
-                if (r === 0 || r === gridSize-1 || c === 0 || c === gridSize-1) {
-                    let curr = `${r},${c}`;
-                    while(curr) {
-                        let [cr, cc] = curr.split(',').map(Number);
-                        finalPath.push(board[cr][cc]);
-                        curr = parent[curr];
-                    }
-                    finalPath.reverse();
+            let finalTrail = [];
+
+            while (queue.length > 0) {
+                let current = queue.shift();
+                let { r, c, path } = current;
+
+                if (r === 0 || r === gridSize - 1 || c === 0 || c === gridSize - 1) {
+                    finalTrail = path;
                     break;
                 }
-                const dirs = [[-1,0], [1,0], [0,-1], [0,1]].sort(() => Math.random() - 0.5);
+
+                const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]].sort(() => Math.random() - 0.5);
                 for (let [dr, dc] of dirs) {
                     let nr = r + dr, nc = c + dc;
-                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize && !board[nr][nc].isMine && !visited.has(`${nr},${nc}`)) {
-                        visited.add(`${nr},${nc}`); parent[`${nr},${nc}`] = `${r},${c}`; queue.push([nr, nc]);
+                    if (nr >= 0 && nr < gridSize && nc >= 0 && nc < gridSize && !visited.has(`${nr},${nc}`)) {
+                        visited.add(`${nr},${nc}`);
+                        if (!board[nr][nc].isMine) {
+                            queue.push({ r: nr, c: nc, path: [...path, board[nr][nc]] });
+                        }
                     }
                 }
             }
-            if (finalPath.length === 0) {
-                let cr = startR; while(cr >= 0) { finalPath.push(board[cr][startC]); cr--; }
-            }
-            finalPath.forEach((cell, index) => {
+
+            // Fallback: If no safe path is found, just reveal the start cell
+            if (finalTrail.length === 0) finalTrail = [board[startR][startC]];
+
+            finalTrail.forEach((cell, index) => {
                 setTimeout(() => {
                     if (gameOver) return;
                     cell.element.classList.add('path-anim');
                     revealPowerupCell(cell);
                     setTimeout(() => cell.element.classList.remove('path-anim'), 500);
-                }, index * 150);
+                }, index * 100);
             });
         }
 
@@ -1320,7 +1204,6 @@
             });
         }
 
-        // --- Instant Power-Ups ---
         btnForge.addEventListener('click', () => {
             if (btnForge.disabled || gameOver || firstClick) return;
             lastForge = Date.now(); btnForge.disabled = true;
@@ -1417,11 +1300,11 @@
         function initLevel() {
             gridSize = level + 2; currentBoardId++; cancelTargetingMode();
             mapScale = 1; mapX = 0; mapY = 0; tempMapX = 0; tempMapY = 0; updateMapTransform();
-            if (level === 1) { totalMines = 1; tutorialIndex = 0; } 
-            else { totalMines = Math.max(1, Math.ceil(gridSize * gridSize * 0.15)); tutorialIndex = -1; }
+            if (level === 1) { totalMines = 1; } 
+            else { totalMines = Math.max(1, Math.ceil(gridSize * gridSize * 0.15)); }
             maxShields = Math.floor(level / 5); currentShields = maxShields;
             flagsPlaced = 0; defusedCount = 0; firstClick = true; gameOver = false; isAnimating = false; board = [];
-            hideTutorial(); animationTimeouts.forEach(clearTimeout); animationTimeouts = [];
+            animationTimeouts.forEach(clearTimeout); animationTimeouts = [];
             stopTimer(); timerEl.textContent = "000"; updateUI(); smileyBtn.textContent = "🙂"; winDialog.style.display = 'none';
             boardEl.style.gridTemplateColumns = `repeat(${gridSize}, 64px)`; boardEl.style.gridTemplateRows = `repeat(${gridSize}, 64px)`; boardEl.innerHTML = '';
             for (let r = 0; r < gridSize; r++) {
@@ -1439,11 +1322,6 @@
                     boardEl.appendChild(cell.element); row.push(cell);
                 }
                 board.push(row);
-            }
-            if (tutorialIndex === 0) {
-                const step = tutorialSteps[0];
-                const target = typeof step.target === 'function' ? step.target() : step.target;
-                showTutorialMessage(step.text, target);
             }
         }
 
@@ -1478,7 +1356,6 @@
             if (isTargetingPathfinder) return executePathfinder(r, c);
             if (isTargetingXStrike) return executeXStrike(r, c);
             if (isTargetingVortex) return executeVortex(r, c);
-            if (tutorialIndex === 0 && (r !== 1 || c !== 1)) return;
             const cell = board[r][c];
             if (cell.isRevealed || cell.isFlagged) return;
             if (firstClick) { startTimer(); placeMines(r, c); firstClick = false; }
@@ -1529,7 +1406,7 @@
 
         function triggerGameOver(won, hitCell = null) {
             if (gameOver) return;
-            gameOver = true; stopTimer(); hideTutorial(); cancelTargetingMode();
+            gameOver = true; stopTimer(); cancelTargetingMode();
             if (won) {
                 smileyBtn.textContent = "😎";
                 const levelPoints = gridSize * gridSize; totalScore += levelPoints; levelScoreDisplayEl.textContent = levelPoints;
